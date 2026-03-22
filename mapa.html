@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sedes Mundial 2026</title>
+    <link rel="stylesheet" href="menu.css">
+    <link rel="stylesheet" href="mapa.css">
+</head>
+<style>
+
+.mobile-menu {
+    top: 60px; 
+}
+</style>
+<body>
+ <header class="navbar">
+    <div class="logo-section">
+        <div class="logo-icon">
+            <img src="img/CHAMPS.png" alt="Logo Champs" class="brand-logo-img">
+        </div>
+        <h1 class="brand-name">CHAMPS</h1>
+    </div>
+    <div class="menu-icon" id="menuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</header>
+
+    <nav class="mobile-menu" id="mobileMenu">
+        <ul>
+            <li><a href="PaginaPrincipall.html">Inicio</a></li>
+            <li><a href="lector.html">Escáner AR</a></li>
+            <li><a href="filtros.html">Filtros Video</a></li>
+            <li><a href="trivias_menu.html">Trivias</a></li>
+        </ul>
+    </nav>
+    
+    <a href="PaginaPrincipall.html" class="btn-volver">
+    <i class="fas fa-arrow-left"></i> Volver
+</a>
+
+    <div class="contenedor-mapa">
+        <img src="img/mapa_mundial.png" alt="Mapa Sedes 2026" class="mapa-img">
+
+        <a href="detalles.html?ciudad=monterrey" class="pin" style="top: 68%; left: 53%;">Monterrey</a>
+        <a href="detalles.html?ciudad=CDMX" class="pin" style="top: 72%; left: 47%;">CDMX</a>
+        <a href="detalles.html?ciudad=guadalajara" class="pin" style="top: 73%; left: 30%;">Guadalajara</a>
+
+        <a href="detalles.html?ciudad=vancouver" class="pin" style="top: 35%; left:17%;">Vancouver</a>
+        <a href="detalles.html?ciudad=seattle" class="pin" style="top: 39%; left: 20%;">Seattle</a>
+        <a href="detalles.html?ciudad=san_francisco" class="pin" style="top: 47%; left: 13%;">San Francisco</a>
+        <a href="detalles.html?ciudad=los_angeles" class="pin" style="top: 54%; left: 16%;">Los Angeles</a>
+        <a href="detalles.html?ciudad=dallas" class="pin" style="top: 58%; left: 52%;">Dallas</a>
+        <a href="detalles.html?ciudad=houston" class="pin" style="top: 63%; left: 57%;">Houston</a>
+        <a href="detalles.html?ciudad=kansas_city" class="pin" style="top: 51%; left: 59%;">Kansas City</a>
+
+        <a href="detalles.html?ciudad=atlanta" class="pin" style="top: 57%; left: 72%;">Atlanta</a>
+        <a href="detalles.html?ciudad=miami" class="pin" style="top: 65%; left: 74%;">Miami</a>
+        <a href="detalles.html?ciudad=toronto" class="pin" style="top: 45%; left: 65%;">Toronto</a>
+        <a href="detalles.html?ciudad=boston" class="pin" style="top: 44%; left: 83%;">Boston</a>
+        <a href="detalles.html?ciudad=philadelphia" class="pin" style="top: 52%; left: 82%;">Philadelphia</a>
+        <a href="detalles.html?ciudad=new_york" class="pin" style="top: 48%; left: 83%;">New York</a>
+    </div>
+
+    <p class="instruccion">Toca el nombre de una ciudad para ver sus partidos</p>
+ <script src="menu.js"></script>
+</body>
+</html>

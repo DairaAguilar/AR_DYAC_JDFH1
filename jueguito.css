@@ -1,0 +1,75 @@
+ 
+        :root {
+            --yellow: #FFD65C;
+            --dark-blue: #1A1A3A;
+            --red: #e74c3c;
+            --grass: #2ecc71;
+        }
+
+        body {
+            background: linear-gradient(180deg, #1A1A3A 0%, #0d0d1f 100%);
+            margin: 0;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- CENTRADO DEL MARCADOR --- */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centra el canvas horizontalmente */
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .game-ui {
+            width: 100%;        /* Ocupa todo el ancho para poder centrar */
+            text-align: center; /* CENTRA EL TEXTO Y EL MARCADOR */
+            margin-bottom: 20px;
+        }
+
+        .score-board {
+            font-size: 4rem;
+            color: var(--yellow);
+            font-weight: 900;
+            margin: 10px 0;
+            display: block;    /* Asegura que se comporte como bloque para centrarse */
+            text-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 25px;
+            border-radius: 50px;
+            display: inline-block; /* Permite que el text-align center del padre lo mueva */
+            font-size: 0.9rem;
+        }
+
+        /* --- CAMPO CON BORDES REDONDEADOS --- */
+        #game-canvas {
+            background: var(--grass);
+            border: 5px solid white;
+            border-radius: 20px; /* Redondeado en las 4 esquinas */
+            display: block;
+            margin: 0 auto;
+            max-width: 95%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none; justify-content: center; align-items: center;
+            z-index: 2000; backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: #111; padding: 40px; border-radius: 25px;
+            border: 4px solid var(--red); text-align: center;
+        }
+        #modalText { font-size: 3rem; color: var(--red); margin: 0; font-weight: 900; }
+   

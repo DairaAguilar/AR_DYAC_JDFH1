@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHAMPS - Procesador de Video</title>
+    <link rel="stylesheet" href="filtros.css">
+    <link rel="stylesheet" href="menu.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo-section">
+            <div class="logo-icon">
+                <img src="img/CHAMPS.png" alt="Logo" class="brand-logo-img">
+            </div>
+            <h1 class="brand-name">CHAMPS</h1>
+        </div>
+        <div class="menu-icon" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <nav class="mobile-menu" id="mobileMenu">
+        <ul>
+            <li><a href="PaginaPrincipall.html">Inicio</a></li>
+            <li><a href="lector.html">Escáner AR</a></li>
+            <li><a href="partidos.html">Partidos</a></li>
+            <li><a href="filtros.html">Filtros</a></li>
+        </ul>
+    </nav>
+
+    <button onclick="location.href='PaginaPrincipall.html'" class="btn-volver">VOLVER</button>
+
+    <div class="container">
+        <div class="controls">
+            <div class="control-group">
+                <label>Desenfoque (Blur)</label>
+                <input type="range" id="blur" min="0" max="10" value="0" step="0.1">
+            </div>
+            <div class="control-group">
+                <label>Contraste</label>
+                <input type="range" id="contrast" min="50" max="200" value="100">
+            </div>
+            <div class="control-group">
+                <label>Brillo</label>
+                <input type="range" id="brightness" min="50" max="200" value="100">
+            </div>
+            <button id="resetFilters">Restablecer Filtros</button>
+        </div>
+
+        <div class="video-container">
+            <video id="videoInput" style="display:none;" loop muted playsinline>
+                <source src="./video/ARGENTINA.mp4" type="video/mp4">
+            </video>
+            <canvas id="videoCanvas"></canvas>
+        </div>
+
+        <div class="video-selector">
+            <p>Selecciona un video:</p>
+            <div class="botones-equipos">
+                <script>
+                    const equipos = [
+                        { name: "ALBANIA", vid: "ALBANIA.mp4", img: "XALBANIA.png" },
+                        { name: "ARGELIA", vid: "ARGELIA.mp4", img: "ALGERIA.png" },
+                        { name: "ARABIA", vid: "ARABIASAUDITA.mp4", img: "ARABIASAUDITA.png" },
+                        { name: "ARGENTINA", vid: "ARGENTINA.mp4", img: "ARGENTINA.png" },
+                        { name: "AUSTRALIA", vid: "AUSTRALIA.mp4", img: "AUSTRALIA.png" },
+                        { name: "AUSTRIA", vid: "AUSTRIA.mp4", img: "AUSTRIA.jpg" },
+                        { name: "BELGICA", vid: "BELGICA.mp4", img: "BELGICA.jpg" },
+                        { name: "BOLIVIA", vid: "BOLIVIA.mp4", img: "XBOLIVIA.png" },
+                        { name: "BRASIL", vid: "BRASIL.mp4", img: "BRASIL.jpg" },
+                        { name: "CANADA", vid: "CANADA.mp4", img: "CANADA.png" },
+                        { name: "COLOMBIA", vid: "COLOMBIA.mp4", img: "COLOMBIA.jpg" },
+                        { name: "COSTA DE MARFIL", vid: "COSTAMARFIL.mp4", img: "COSTAMARFIL.jpg" },
+                        { name: "CROACIA", vid: "CROACIA.mp4", img: "CROACIA.png" },
+                        { name: "CURAZAO", vid: "CURAZAO.mp4", img: "CURAZAO.jpg" },
+                        { name: "ECUADOR", vid: "ECUADOR.mp4", img: "ECUADOR.png" },
+                        { name: "EGIPTO", vid: "EGIPTO.mp4", img: "EGIPTO.png" },
+                        { name: "ESCOCIA", vid: "ESCOCIA.mp4", img: "ESCOCIA.png" },
+                        { name: "ESPAÑA", vid: "ESPAÑA.mp4", img: "ESPAÑA.jpg" },
+                        { name: "EUA", vid: "EUA.mp4", img: "EUA.jpg" },
+                        { name: "FRANCIA", vid: "FRANCIA.mp4", img: "FRANCIA.png" },
+                        { name: "ALEMANIA", vid: "GERMANIA.mp4", img: "GERMANIA.png" },
+                        { name: "GHANA", vid: "GHANA.mp4", img: "GANHA.png" },
+                        { name: "HAITI", vid: "HAITI.mp4", img: "HAITI.png" },
+                        { name: "HONDURAS", vid: "HONDURAS.mp4", img: "XHONDURAS.png" },
+                        { name: "INGLATERRA", vid: "INGLATERRA.mp4", img: "INGLATERRA.png" },
+                        { name: "CABO VERDE", vid: "ISLASDELCABOVERDE.mp4", img: "ISLASDELCABOVERDE.jpg" },
+                        { name: "JAPON", vid: "JAPON.mp4", img: "JAPON.png" },
+                        { name: "JORDANIA", vid: "JORDANIA.mp4", img: "JORDANIA.png" },
+                        { name: "COREA", vid: "KOREA.mp4", img: "KOREA.jpg" },
+                        { name: "MALI", vid: "MALI.mp4", img: "XMALI.png" },
+                        { name: "MARRUECOS", vid: "MARRUECOS.mp4", img: "MARRUECOS.png" },
+                        { name: "MEXICO", vid: "MEXICO.mp4", img: "MEXICO.png" },
+                        { name: "NORUEGA", vid: "NORUEGA.mp4", img: "NORUEGA.png" },
+                        { name: "N. ZELANDA", vid: "NUEVAZELANDA.mp4", img: "NUEVAZELANDA.png" },
+                        { name: "OMAN", vid: "OMAN.mp4", img: "XOMAN.png" },
+                        { name: "P. BAJOS", vid: "PAISESBAJOS.mp4", img: "PAISESBAJOS.jpg" },
+                        { name: "PANAMA", vid: "PANAMA.mp4", img: "PANAMA.png" },
+                        { name: "PARAGUAY", vid: "PARAGUAY.mp4", img: "PARAGUAY.png" },
+                        { name: "PORTUGAL", vid: "PORTUGAL.mp4", img: "PORTUGAL.jpg" },
+                        { name: "QATAR", vid: "QATAR.mp4", img: "QATAR.png" },
+                        { name: "CONGO", vid: "RDCONGO.mp4", img: "XRDCONGO.png" },
+                        { name: "IRÁN", vid: "RIDEIRAN.mp4", img: "RIDEIRAN.png" },
+                        { name: "SENEGAL", vid: "SENEGAL.mp4", img: "SENEGAL.png" },
+                        { name: "SUDÁFRICA", vid: "SUDAFRICA.mp4", img: "SUDAFRICA.png" },
+                        { name: "SUIZA", vid: "SUIZA.mp4", img: "SUIZA.png" },
+                        { name: "TÚNEZ", vid: "TUNEZ.mp4", img: "TUNEZ.png" },
+                        { name: "URUGUAY", vid: "URUGUAY.mp4", img: "URUGUAY.png" },
+                        { name: "UZBEKISTÁN", vid: "UZBEKISTAN.mp4", img: "UZBEKISTAN.png" }
+                        //AGREGA LOS OTROS 6 PASIES
+                    ];
+
+                    equipos.forEach(equipo => {
+                        document.write(`
+                            <button class="btn-equipo" onclick="changeVideo('./video/${equipo.vid}', this)">
+                                <img src="./BANDERAS1/${equipo.img}" alt="${equipo.name}">
+                                <span>${equipo.name}</span>
+                            </button>
+                        `);
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <script src="filtros.js"></script>
+    <script src="menu.js"></script>
+</body>
+</html>

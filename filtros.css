@@ -1,0 +1,170 @@
+:root {
+    --yellow: #FFD65C;
+    --dark-blue: #1A1A3A;
+    --white: #FFFFFF;
+}
+
+body {
+    background-color: var(--dark-blue);
+    color: var(--white);
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+.container { 
+    width: 95%; 
+    max-width: 800px; 
+    text-align: center; 
+    margin: 10px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Video */
+.video-wrapper, .video-container {
+    margin: 10px 0;
+    border: 3px solid var(--yellow);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #000;
+    width: 100%;
+}
+
+video { display: none; } 
+
+canvas {
+    width: 100%;
+    max-height: 450px;
+    display: block;
+}
+
+/* Controles de Filtros */
+.controls {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.control-group label {
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+input[type="range"] { 
+    width: 100%; 
+    accent-color: var(--yellow); 
+}
+
+#resetFilters {
+    grid-column: span 2;
+    padding: 10px;
+    background: var(--yellow);
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #000;
+}
+
+/* --- SECTOR DE PAÍSES (SOLUCIÓN 2 COLUMNAS) --- */
+.botones-equipos {
+    display: grid !important;
+    /* Fuerza 2 columnas iguales siempre */
+    grid-template-columns: repeat(2, 1fr) !important; 
+    gap: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 10px !important;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.btn-equipo {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    min-width: 0 !important; /* Permite que el botón se encoja */
+    background: #2a2a2a;
+    border: 2px solid #444;
+    border-radius: 8px;
+    padding: 10px !important;
+    cursor: pointer;
+    box-sizing: border-box !important;
+    transition: all 0.2s ease;
+}
+
+.btn-equipo img {
+    width: 100% !important;
+    max-width: 60px !important; /* Tamaño de la bandera */
+    height: auto !important;
+    aspect-ratio: 3/2;
+    object-fit: cover;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+.btn-equipo span {
+    font-size: 11px !important;
+    color: white;
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Pone ... si el nombre es muy largo */
+}
+
+/* Estados del Botón */
+.btn-equipo:hover {
+    border-color: var(--yellow);
+}
+
+.btn-equipo.active {
+    background: var(--yellow) !important;
+    border-color: white !important;
+}
+
+.btn-equipo.active span {
+    color: #000 !important;
+    font-weight: bold;
+}
+
+/* Scrollbar personalizado */
+.botones-equipos::-webkit-scrollbar {
+    width: 6px;
+}
+.botones-equipos::-webkit-scrollbar-thumb {
+    background: var(--yellow);
+    border-radius: 10px;
+}
+
+/* Botón Volver */
+.btn-volver {
+    display: inline-block;
+    margin: 10px;
+    color: var(--yellow);
+    text-decoration: none;
+    background: none;
+    border: 1px solid var(--yellow);
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}

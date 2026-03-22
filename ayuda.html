@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CHAMPS - Centro de Ayuda</title>
+    <link rel="stylesheet" href="menu.css">
+    <link rel="stylesheet" href="ayuda.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo-section">
+        <div class="logo-icon">
+            <img src="img/CHAMPS.png" alt="Logo Champs" class="brand-logo-img">
+        </div>
+        <h1 class="brand-name">CHAMPS</h1>
+    </div>
+    <div class="menu-icon" id="menuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</header>
+
+    <nav class="mobile-menu" id="mobileMenu">
+        <ul>
+            <li><a href="PaginaPrincipall.html">Inicio</a></li>
+            <li><a href="lector.html">Escáner AR</a></li>
+            <li><a href="filtros.html">Filtros Video</a></li>
+            <li><a href="trivias_menu.html">Trivias</a></li>
+        </ul>
+    </nav>
+
+<main class="ayuda-container">
+    <button class="btn-volver-ayuda" onclick="window.history.back()">
+        <i class="fas fa-arrow-left"></i> Volver
+    </button>
+    
+    <div class="intro-ayuda">
+        <h2>Guía de Uso</h2>
+        <p>Toca una opción para ver el tutorial.</p>
+    </div>
+
+    <div class="guia-grid">
+        <div class="guia-card" onclick="openModal('video-escanner')">
+            <i class="fas fa-qrcode icon-category"></i>
+            <h3>Escáner AR</h3>
+        </div>
+        <div class="guia-card" onclick="openModal('video-trivias')">
+            <i class="fas fa-trophy icon-category"></i>
+            <h3>Trivias</h3>
+        </div>
+        <div class="guia-card" onclick="openModal('video-filtros')">
+            <i class="fas fa-video icon-category"></i>
+            <h3>Filtros</h3>
+        </div>
+        <div class="guia-card" onclick="openModal('video-partidos')">
+            <i class="fas fa-calendar-alt icon-category"></i>
+            <h3>Partidos</h3>
+        </div>
+    </div>
+</main>
+
+<div id="videoModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">TUTORIAL</h3>
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+        </div>
+        
+        <div class="modal-body-scroll">
+            <div class="video-container">
+                <video id="tutorialVideo" controls playsinline></video>
+            </div>
+            
+            <div class="instructions-section">
+                <h4>Pasos a seguir:</h4>
+                <div id="instruccionesEscritas">
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="ayuda.js"></script>
+<script>
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuToggle.onclick = () => mobileMenu.classList.toggle('active');
+</script>
+
+</body>
+</html>

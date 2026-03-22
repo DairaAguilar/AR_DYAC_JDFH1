@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Champs - Mini Juego de Penaltis</title>
+    <link rel="stylesheet" href="jueguito.css">
+    <link rel="stylesheet" href="menu.css">
+   
+</head>
+<body>
+
+  <header class="navbar">
+        <div class="logo-section">
+            <div class="logo-icon">
+                <img src="img/CHAMPS.png" alt="Logo" class="brand-logo-img">
+            </div>
+            <h1 class="brand-name">CHAMPS</h1>
+        </div>
+        <div class="menu-icon" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <nav class="mobile-menu" id="mobileMenu">
+        <ul>
+            <li><a href="PaginaPrincipall.html">Inicio</a></li>
+            <li><a href="lector.html">Escáner AR</a></li>
+            <li><a href="partidos.html">Partidos</a></li>
+            <li><a href="filtros.html">Filtros</a></li>
+        </ul>
+    </nav>
+
+    <button onclick="location.href='PaginaPrincipall.html'" class="btn-volver">VOLVER</button>
+
+    <main class="game-container">
+        <div class="game-ui">
+            <h2 style="letter-spacing: 2px; text-transform: uppercase;">Penaltis</h2>
+            <div class="score-board" id="scoreVal">0</div>
+            <div class="instructions">Si el portero la para, vuelves a 0</div>
+        </div>
+
+        <canvas id="game-canvas" width="400" height="500"></canvas>
+    </main>
+
+    <div id="gameModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modalText">¡ATAJADA!</h2>
+            <p style="color: white; margin-top: 10px;">Marcador reiniciado a 0</p>
+        </div>
+    </div>
+    <script src="jueguito.js"></script>
+    <script src="menu.js"></script>
+    
+</body>
+</html>

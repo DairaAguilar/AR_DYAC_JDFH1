@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Champs - Trivias Mundialistas</title>
+    <link rel="stylesheet" href="filtros.css"> 
+    <link rel="stylesheet" href="menu.css">
+    <style>
+        /* Estilos específicos para la cuadrícula de imágenes */
+        .grid-trivias {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .trivia-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid var(--yellow);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: #000;
+        }
+
+        .trivia-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(255, 214, 92, 0.3);
+        }
+
+        .trivia-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .trivia-card:hover img {
+            opacity: 1;
+        }
+
+        .card-info {
+            padding: 15px;
+            background: rgba(26, 26, 58, 0.9);
+            text-align: center;
+        }
+
+        .card-info h3 {
+            margin: 0;
+            color: var(--yellow);
+            font-size: 1.2rem;
+        }
+
+          .back-btn {
+    display: block;    /* Hace que ocupe su propia línea */
+    width: fit-content;
+    margin: 20px 0 10px 20px; /* 20px arriba, 20px izquierda */
+    text-decoration: none;
+    background-color: #FFD65C;
+    color: #1A1A3A;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #fff;
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .back-btn {
+        top: 80px;
+        padding: 8px 15px;
+
+        font-size: 0.9rem;
+    }
+}
+    </style>
+</head>
+<body>
+  
+ <header class="navbar">
+    <div class="logo-section">
+        <div class="logo-icon">
+            <img src="img/CHAMPS.png" alt="Logo Champs" class="brand-logo-img">
+        </div>
+        <h1 class="brand-name">CHAMPS</h1>
+    </div>
+    <div class="menu-icon" id="menuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</header>
+
+    <nav class="mobile-menu" id="mobileMenu">
+        <ul>
+            <li><a href="PaginaPrincipall.html">Inicio</a></li>
+            <li><a href="lector.html">Escáner AR</a></li>
+            <li><a href="filtros.html">Filtros Video</a></li>
+            <li><a href="trivias.html">Trivias</a></li>
+        </ul>
+    </nav>
+
+     <button onclick="location.href='PaginaPrincipall.html'" class="back-btn" >
+        VOLVER
+    </button>
+
+    <div class="container">
+      
+        <h1>Demuestra tu conocimiento</h1>
+        <p>Selecciona una trivia y pon a prueba tus datos mundialistas</p>
+
+        <div class="grid-trivias" id="triviaGrid">
+            </div>
+    </div>
+
+    <script>
+        // Datos de las 10 trivias
+        // Configuración de las selecciones para las trivias
+       const selecciones =
+       [
+    { nombre: "ALBANIA", id: "alb", img: "./BANDERAS1/XALBANIA.png" },
+    { nombre: "ARABIA", id: "ksa", img: "./BANDERAS1/ARABIASAUDITA.png" },
+    { nombre: "ARGELIA", id: "alg", img: "./BANDERAS1/ALGERIA.png" },
+    { nombre: "ARGENTINA", id: "arg", img: "./BANDERAS1/ARGENTINA.png" },
+    { nombre: "AUSTRALIA", id: "aus", img: "./BANDERAS1/AUSTRALIA.png" },
+    { nombre: "AUSTRIA", id: "aut", img: "./BANDERAS1/AUSTRIA.jpg" },
+    { nombre: "BÉLGICA", id: "bel", img: "./BANDERAS1/BELGICA.jpg" },
+    { nombre: "BOLIVIA", id: "bol", img: "./BANDERAS1/XBOLIVIA.png" },
+    { nombre: "BRASIL", id: "bra", img: "./BANDERAS1/BRASIL.jpg" },
+    { nombre: "CANADÁ", id: "can", img: "./BANDERAS1/CANADA.png" },
+    { nombre: "COLOMBIA", id: "col", img: "./BANDERAS1/COLOMBIA.jpg" },
+    { nombre: "COSTA DE MARFIL", id: "civ", img: "./BANDERAS1/COSTAMARFIL.jpg" },
+    { nombre: "CROACIA", id: "cro", img: "./BANDERAS1/CROACIA.png" },
+    { nombre: "CURAZAO", id: "cur", img: "./BANDERAS1/CURAZAO.jpg" },
+    { nombre: "ECUADOR", id: "ecu", img: "./BANDERAS1/ECUADOR.png" },
+    { nombre: "EGIPTO", id: "egy", img: "./BANDERAS1/EGIPTO.png" },
+    { nombre: "ESCOCIA", id: "sco", img: "./BANDERAS1/ESCOCIA.png" },
+    { nombre: "ESPAÑA", id: "esp", img: "./BANDERAS1/ESPAÑA.jpg" },
+    { nombre: "EUA", id: "usa", img: "./BANDERAS1/EUA.jpg" },
+    { nombre: "FRANCIA", id: "fra", img: "./BANDERAS1/FRANCIA.png" },
+    { nombre: "GERMANIA", id: "ale", img: "./BANDERAS1/GERMANIA.png" },
+    { nombre: "GHANA", id: "gha", img: "./BANDERAS1/GANHA.png" },
+    { nombre: "HAITÍ", id: "hai", img: "./BANDERAS1/HAITI.png" },
+    { nombre: "HONDURAS", id: "hon", img: "./BANDERAS1/XHONDURAS.png" },
+    { nombre: "INGLATERRA", id: "ing", img: "./BANDERAS1/INGLATERRA.png" },
+    { nombre: "ISLAS CABO VERDE", id: "cpv", img: "./BANDERAS1/ISLASDELCABOVERDE.jpg" },
+    { nombre: "JAPÓN", id: "jpn", img: "./BANDERAS1/JAPON.png" },
+    { nombre: "JORDANIA", id: "jor", img: "./BANDERAS1/JORDANIA.png" },
+    { nombre: "COREA", id: "kor", img: "./BANDERAS1/KOREA.jpg" },
+    { nombre: "MALÍ", id: "mli", img: "./BANDERAS1/XMALI.png" },
+    { nombre: "MARRUECOS", id: "mar", img: "./BANDERAS1/MARRUECOS.png" },
+    { nombre: "MÉXICO", id: "mex", img: "./BANDERAS1/MEXICO.png" },
+    { nombre: "NORUEGA", id: "nor", img: "./BANDERAS1/NORUEGA.png" },
+    { nombre: "NUEVA ZELANDA", id: "nzl", img: "./BANDERAS1/NUEVAZELANDA.png" },
+    { nombre: "OMÁN", id: "oma", img: "./BANDERAS1/XOMAN.png" },
+    { nombre: "PAÍSES BAJOS", id: "ned", img: "./BANDERAS1/PAISESBAJOS.jpg" },
+    { nombre: "PANAMÁ", id: "pan", img: "./BANDERAS1/PANAMA.png" },
+    { nombre: "PARAGUAY", id: "par", img: "./BANDERAS1/PARAGUAY.png" },
+    { nombre: "PORTUGAL", id: "por", img: "./BANDERAS1/PORTUGAL.jpg" },
+    { nombre: "QATAR", id: "qat", img: "./BANDERAS1/QATAR.png" },
+    { nombre: "REPÚBLICA DEL CONGO", id: "cod", img: "./BANDERAS1/XRDCONGO.png" },
+    { nombre: "RI DE IRAN", id: "irn", img: "./BANDERAS1/RIDEIRAN.png" },
+    { nombre: "SENEGAL", id: "sen", img: "./BANDERAS1/SENEGAL.png" },
+    { nombre: "SUDAFRICA", id: "rsa", img: "./BANDERAS1/SUDAFRICA.png" },
+    { nombre: "SUIZA", id: "sui", img: "./BANDERAS1/SUIZA.png" },
+    { nombre: "TÚNEZ", id: "tun", img: "./BANDERAS1/TUNEZ.png" },
+    { nombre: "URUGUAY", id: "uru", img: "./BANDERAS1/URUGUAY.png" },
+    { nombre: "UZBEKISTÁN", id: "uzb", img: "./BANDERAS1/UZBEKISTAN.png" }
+] ;
+
+        const grid = document.getElementById('triviaGrid');
+
+        selecciones.forEach(pais => {
+            const card = document.createElement('div');
+            card.className = 'trivia-card';
+            card.innerHTML = `
+                <img src="${pais.img}" alt="${pais.nombre}" onerror="this.src='https://via.placeholder.com/300x200?text=${pais.nombre}'">
+                <div class="card-info">
+                    <h3>${pais.nombre}</h3>
+                </div>
+            `;
+            card.onclick = () => window.location.href = `preguntas.html?pais=${pais.id}`;
+            grid.appendChild(card);
+        });
+    </script>
+    <script src="menu.js"></script>
+</body>
+</html>

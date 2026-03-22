@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Champs - Tigresin</title>
+    <link rel="stylesheet" href="menu.css">
+    <link rel="stylesheet" href="PaginaPrincipal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+ <header class="navbar">
+    <div class="logo-section">
+        <div class="logo-icon">
+            <img src="img/CHAMPS.png" alt="Logo Champs" class="brand-logo-img">
+        </div>
+        <h1 class="brand-name">CHAMPS</h1>
+    </div>
+    <div class="menu-icon" id="menuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</header>
+
+    <nav class="mobile-menu" id="mobileMenu">
+        <ul>
+            <li><a href="PaginaPrincipall.html">Inicio</a></li>
+            <li><a href="lector.html">Escáner AR</a></li>
+            <li><a href="filtros.html">Filtros Video</a></li>
+            <li><a href="trivias_menu.html">Trivias</a></li>
+        </ul>
+    </nav>
+
+    <main class="content">
+    <section class="quick-actions">
+        <button class="nav-card" onclick="location.href='mapa.html'">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Partidos</span>
+        </button>
+        <button class="nav-card" onclick="location.href='lector.html'">
+            <i class="fas fa-qrcode"></i>
+            <span>Escanear</span>
+        </button>
+        <button class="nav-card" onclick="location.href='filtros.html'">
+            <i class="fas fa-video"></i>
+            <span>Filtros</span>
+        </button>
+        <button class="nav-card" onclick="location.href='trivias_menu.html'">
+            <i class="fas fa-trophy"></i>
+            <span>Trivias</span>
+        </button>
+        
+    </section>
+
+    <div class="juego-destacado-container">
+    <button class="nav-card card-juego" onclick="location.href='jueguito.html'">
+        <i class="fas fa-gamepad"></i>
+        <span>¡Minijuego!</span>
+    </button>
+</div>
+</main>
+
+<div class="tigre-container">
+    <div class="bubble-dialogo">
+        Si necesitas ayuda, presiona mi nariz
+    </div>
+    
+    <img src="img/LEOPARDO.png" alt="Tigre Asistente" class="tigre-img">
+    
+    <button id="btn-nariz" title="Presiona mi nariz"></button>
+</div>
+
+    <script src="PaginaPrincipall.js"></script>
+    <script src="menu.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+:root {
+    --yellow: #FFD65C;
+    --dark-blue: #1A1A3A;
+    --light-blue: #252550;
+    --white: #FFFFFF;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--dark-blue);
+    color: var(--white);
+    overflow-x: hidden;
+}
+
+.ayuda-container {
+    padding: 15px;
+}
+
+.btn-volver-ayuda {
+    background: var(--yellow);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1rem;
+    margin: 15px 0;
+    color: var(--dark-blue);
+}
+
+.intro-ayuda h2 { color: var(--yellow); font-size: 1.8rem; margin-bottom: 5px; }
+
+.guia-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.guia-card {
+    background: var(--light-blue);
+    padding: 25px 10px;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.icon-category { font-size: 2.2rem; color: var(--yellow); margin-bottom: 10px; display: block; }
+
+/* --- ESTILOS DEL MODAL --- */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 2000;
+}
+
+.modal-content {
+    background: var(--dark-blue);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* HEADER AMARILLO */
+.modal-header {
+    background-color: var(--yellow);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 2100;
+}
+
+/* TÍTULO AZUL Y GRANDE */
+#modalTitle {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--dark-blue); /* Letras azules */
+    text-transform: uppercase;
+    margin: 0;
+    text-align: center;
+    line-height: 1.2;
+    letter-spacing: 1px;
+    padding-right: 30px; /* Espacio para la X */
+}
+
+/* "X" AZUL */
+.close-modal {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 40px;
+    font-weight: bold;
+    color: var(--dark-blue); /* X azul */
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-body-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.video-container video {
+    width: 100%;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+/* PASOS CON IMÁGENES GRANDES */
+.paso-item {
+    background: var(--light-blue);
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.paso-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-bottom: 4px solid var(--yellow);
+}
+
+.paso-item p {
+    padding: 20px;
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: #fff;
+}
+
+.instructions-section h4 {
+    color: var(--yellow);
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--yellow);
+    padding-left: 10px;
+}
+
+@media (min-width: 768px) {
+    .guia-grid { grid-template-columns: repeat(4, 1fr); }
+    .modal-content { width: 500px; height: 90%; border-radius: 20px; margin: auto; margin-top: 2%; }
+    .modal-header { border-radius: 20px 20px 0 0; }
+}
