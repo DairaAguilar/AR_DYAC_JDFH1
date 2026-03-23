@@ -9,7 +9,7 @@
 
         let ready = false, score = 0, isShooting = false;
         let ballX = 200, ballY = 440, ballVX = 0, ballVY = -12;
-        let goalieX = 150, goalieY = 60, goalieWidth = 90, goalieHeight = 80, goalieDir = 3.5;
+        let goalieX = 150, goalieY = 60, goalieWidth = 90, goalieHeight = 80, goalieDir = 4.7;
 
         imgPortero.onload = imgBalon.onload = () => ready = true;
 
