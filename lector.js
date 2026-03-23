@@ -10,6 +10,18 @@ let botonInfo = null;
 let panelInfo = null;
 let botonConfetti = null;
 
+const mostrarCargando = (ver) => {
+    let loader = document.getElementById('loading-screen');
+    if (!loader) {
+      loader = document.createElement('div');
+      loader.id = 'loading-screen';
+      loader.innerHTML = '<p>Cargando modelo...</p>';
+      // Estilo rápido por si no lo pones en el CSS
+      loader.setAttribute('style', 'position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(26,26,58,0.9); color:#FFD65C; padding:15px 25px; border-radius:10px; font-family:sans-serif; z-index:9999; border: 2px solid #FFD65C;');
+      document.body.appendChild(loader);
+    }
+    loader.style.display = ver ? 'block' : 'none';
+  };
 
    const equipos = [
     { 
@@ -469,7 +481,7 @@ document.body.appendChild(botonConfetti);
     contentHolder.appendChild(textEl);
 
     function crearModeloBase() {
-
+      mostrarCargando(true); // Mostrar mensaje
       const modelEl = document.createElement('a-gltf-model');
 
       modelEl.setAttribute('src', '#jugador-base');
@@ -478,14 +490,13 @@ document.body.appendChild(botonConfetti);
       modelEl.setAttribute('visible', 'false');
 
       modelEl.addEventListener("model-loaded", async () => {
-
         await aplicarTexturas(
           modelEl.getObject3D('mesh'),
           equipo.bodyTex,
           equipo.headTex
         );
-
         modelEl.setAttribute('visible', 'true');
+        mostrarCargando(false); // Ocultar al terminar
       });
 
       contentHolder.appendChild(modelEl);
@@ -493,7 +504,7 @@ document.body.appendChild(botonConfetti);
     }
 
     function crearModeloAnimado() {
-
+      mostrarCargando(true); // Mostrar mensaje
       const animatedModel = document.createElement('a-gltf-model');
 
       animatedModel.setAttribute('src', '#jugador-animado');
@@ -504,14 +515,13 @@ document.body.appendChild(botonConfetti);
       animatedModel.setAttribute('visible', 'false');
 
       animatedModel.addEventListener("model-loaded", async () => {
-
         await aplicarTexturas(
           animatedModel.getObject3D('mesh'),
           equipo.bodyTexAnim || equipo.bodyTex,
           equipo.headTex
         );
-
         animatedModel.setAttribute('visible', 'true');
+        mostrarCargando(false); // Ocultar al terminar
       });
 
       contentHolder.appendChild(animatedModel);
