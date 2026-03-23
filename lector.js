@@ -19,7 +19,7 @@ sceneEl.addEventListener("arReady", (event) => {
     }, 500);
   });
 
-  // Evento si hay error de cámara
+  // error de cámara
   sceneEl.addEventListener("arError", (event) => {
     console.error("Error en AR", event);
     const p = loadingOverlay.querySelector('p');
@@ -32,7 +32,6 @@ const mostrarCargando = (ver) => {
       loader = document.createElement('div');
       loader.id = 'loading-screen';
       loader.innerHTML = '<p>Cargando modelo...</p>';
-      // Estilo rápido por si no lo pones en el CSS
       loader.setAttribute('style', 'position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(26,26,58,0.9); color:#FFD65C; padding:15px 25px; border-radius:10px; font-family:sans-serif; z-index:9999; border: 2px solid #FFD65C;');
       document.body.appendChild(loader);
     }
