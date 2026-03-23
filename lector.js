@@ -19,7 +19,6 @@ sceneEl.addEventListener("arReady", (event) => {
     }, 500);
   });
 
-  // error de cámara
   sceneEl.addEventListener("arError", (event) => {
     console.error("Error en AR", event);
     const p = loadingOverlay.querySelector('p');
