@@ -132,3 +132,32 @@ body { margin: 0; overflow: hidden; }
     z-index: 100; /* Asegúrate de que esté por encima de todo */
     pointer-events: none;
 }
+
+#loading-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle, #1A1A3A 0%, #0a0a1a 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* Por encima de todo */
+    transition: opacity 0.5s ease;
+}
+
+.loader-content { text-align: center; color: #FFD65C; font-family: sans-serif; }
+
+.spinner {
+    width: 50px; height: 50px;
+    border: 5px solid rgba(255, 214, 92, 0.2);
+    border-top: 5px solid #FFD65C;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+#loading-overlay h1 { letter-spacing: 5px; margin: 0; font-size: 24px; }
+#loading-overlay p { opacity: 0.8; font-size: 14px; }

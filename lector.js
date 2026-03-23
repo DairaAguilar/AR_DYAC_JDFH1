@@ -4,11 +4,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const sceneEl = document.querySelector('#ar-scene');
   const textureLoader = new THREE.TextureLoader();
-
+  const loadingOverlay = document.getElementById('loading-overlay');
+  
 let botonActual = null;
 let botonInfo = null;
 let panelInfo = null;
 let botonConfetti = null;
+
+sceneEl.addEventListener("arReady", (event) => {
+    console.log("MindAR está listo");
+    loadingOverlay.style.opacity = "0";
+    setTimeout(() => {
+      loadingOverlay.style.display = "none";
+    }, 500);
+  });
+
+  // Evento si hay error de cámara
+  sceneEl.addEventListener("arError", (event) => {
+    console.error("Error en AR", event);
+    const p = loadingOverlay.querySelector('p');
+    if(p) p.innerText = "Error al acceder a la cámara.";
+  });
 
 const mostrarCargando = (ver) => {
     let loader = document.getElementById('loading-screen');
