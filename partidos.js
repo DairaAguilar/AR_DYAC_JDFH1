@@ -1,4 +1,4 @@
-// Función para convertir las cadenas de fecha en objetos Date comparables
+
 const parseFecha = (fechaStr) => {
     const meses = { "junio": 5, "julio": 6 };
     const partes = fechaStr.split(", ")[1].split(" de ");
@@ -7,7 +7,7 @@ const parseFecha = (fechaStr) => {
     return new Date(2026, mes, dia);
 };
 
-// Combinar todos los partidos en una sola lista cronológica
+
 let todosLosPartidos = [];
 Object.keys(datosPartidos).forEach(ciudad => {
     datosPartidos[ciudad].forEach(partido => {
@@ -15,10 +15,10 @@ Object.keys(datosPartidos).forEach(ciudad => {
     });
 });
 
-// Ordenar por fecha
+
 todosLosPartidos.sort((a, b) => parseFecha(a.fecha) - parseFecha(b.fecha));
 
-// Insertar en el HTML
+
 const lista = document.getElementById('lista-partidos');
 todosLosPartidos.forEach(p => {
     lista.innerHTML += `

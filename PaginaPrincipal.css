@@ -232,25 +232,24 @@ body {
     border-color: white transparent transparent;
 }
 
-/* BOTÓN INVISIBLE EN LA NARIZ */
-/* BUSCA ESTO EN TUCSS Y CÁMBIALO TEMPORALMENTE */
+
 #btn-nariz {
     position: absolute;
     top: 35%; 
     left: 54%;
-    width: 40px; /* Lo hacemos un poco más grande para probar */
+    width: 40px; 
     height: 40px;
     
-    background: rgba(255, 0, 0, 0); /* <--- CAMBIA A ROJO SEMITRANSPARENTE */
-    border: rgba(255, 0, 0, 0); /* Añade un borde para verlo mejor */
+    background: rgba(255, 0, 0, 0); 
+    border: rgba(255, 0, 0, 0); 
     
     cursor: pointer;
     border-radius: 50%;
     z-index: 1001;
-    pointer-events: auto; /* Asegura que reciba clics */
+    pointer-events: auto; 
 }
 
-/* Media query para móviles (copiando tu estilo anterior) */
+
 @media (max-width: 480px) {
     .tigre-container { width: 120px; }
     .bubble-dialogo { width: 100px; font-size: 0.7rem; top: -50px; }
