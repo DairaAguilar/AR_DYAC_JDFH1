@@ -9,10 +9,10 @@
 
         let ready = false, score = 0, isShooting = false;
         let ballX = 200, ballY = 440, ballVX = 0, ballVY = -12;
-        let goalieX = 150, goalieY = 60, goalieWidth = 90, goalieHeight = 80, goalieDir = 4.7;
+        let goalieX = 150, goalieY = 60, goalieWidth = 90, goalieHeight = 80, goalieDir = 5;
 
         imgPortero.onload = imgBalon.onload = () => ready = true;
-
+.0
         function handleAtajada() {
             isShooting = "paused";
             score = 0; scoreEl.innerText = "0";
