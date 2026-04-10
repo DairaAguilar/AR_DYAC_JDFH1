@@ -15,7 +15,7 @@ let ready = false, score = 0, isShooting = false;
 let ballX = 200, ballY = 440, ballVX = 0, ballVY = -12;
 
 
-let goalieX = 150, goalieY = 60, goalieWidth = 90, goalieHeight = 80;
+let goalieX = 100, goalieY = 60, goalieWidth = 90, goalieHeight = 80;
 let goalieSpeed = 5;      
 let goalieDir = 1;        
 let lastDecisionTime = 0; 
@@ -52,7 +52,7 @@ function update() {
             goalieDir *= -1;
         }
        
-        goalieSpeed = 4 + Math.random() * 5;
+        goalieSpeed = 4 + Math.random() * 2;
         
         lastDecisionTime = currentTime;
     }
