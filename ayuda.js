@@ -7,7 +7,7 @@ const tutoriales = {
             { txt: "Paso 2: Escanea una imagen con la camara.", img: "tutorial/AR.png" },
             { txt: "Paso 3: Si quieres que baile o deje de bailar, presiona el botón de ANIMAR.", img: "tutorial/AR2.png" },
             { txt: "Paso 4: Si quieres ver confetti, da click al botón celebrar.", img: "tutorial/AR3.png" },
-            { txt: "Paso 5: Presiona el boton de INFO, para ver información del PAIS.", img: "tutorial/AR4.png" }
+            { txt: "Paso 5: Presiona el botón de INFO, para ver información del PAIS.", img: "tutorial/AR4.png" }
         ]
     },
      'video-trivias': {
