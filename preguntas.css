@@ -1,48 +1,49 @@
 
-        .quiz-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 3px;
-            border-radius: 20px;
-            border: 2px solid var(--yellow);
-            width: 450px;
-            margin-top: 10px;
-        }
-        .progress-bar {
-            max-width: 430px;
-            margin-left:auto;
-            margin-right:auto;
-            height: 10px;
-            background: #1A1A3A;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
+       .quiz-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px; /* Aumenté un poco el padding para que el texto no pegue al borde */
+    border-radius: 20px;
+    border: 2px solid var(--yellow);
+    width: 90%; /* Ocupará el 90% del ancho de la pantalla en móviles */
+    max-width: 450px; /* Pero nunca crecerá más de 450px en pantallas grandes */
+    margin: 20px auto; /* Lo centra horizontalmente y le da aire arriba/abajo */
+    box-sizing: border-box; /* Crucial para que el padding no sume al ancho total */
+}
+       .progress-bar {
+    width: 100%; /* Que use el 100% de su contenedor (.quiz-card) */
+    max-width: 430px;
+    height: 10px;
+    background: #1A1A3A;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
         #progress-fill {
             width: 0%;
             height: 100%;
             background: var(--yellow);
             transition: width 0.3s ease;
         }
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            margin-top: 25px;
-            max-width: 400px;
-            margin-left:auto;
-            margin-right:auto;
-        }
+       .options-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 25px;
+    width: 100%; /* Cambiado de max-width a width para que sea fluido */
+}
         .option-btn {
-            background: transparent;
-            border: 1px solid var(--white);
-            color: var(--white);
-            padding: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 1rem;
-            text-align: left;
-        }
+    background: transparent;
+    border: 1px solid var(--white);
+    color: var(--white);
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1rem;
+    text-align: left;
+    width: 100%; /* Asegura que el botón use todo el ancho disponible */
+    box-sizing: border-box;
+}
         .option-btn:hover {
             background: rgba(255, 214, 92, 0.2);
             border-color: var(--yellow);
