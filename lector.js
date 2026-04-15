@@ -458,20 +458,7 @@ const mostrarCargando = (ver) => {
     });
   }
 
-  // BOTÓN CONFETTI GLOBAL 
-botonConfetti = document.createElement("button");
-botonConfetti.innerText = "Celebrar 🎉";
-botonConfetti.className = "confetti-btn";
 
-botonConfetti.onclick = () => {
-  window.confetti({
-    particleCount: 200,
-    spread: 90,
-    origin: { y: 0.6 }
-  });
-};
-
-document.body.appendChild(botonConfetti);
 
   equipos.forEach((equipo, index) => {
 
@@ -542,6 +529,8 @@ document.body.appendChild(botonConfetti);
       modeloActual = animatedModel;
     }
 
+    let botonTrivia = null;
+
     targetEntity.addEventListener("targetFound", () => {
 
       if (!modeloActual) {
@@ -606,6 +595,83 @@ document.body.appendChild(botonConfetti);
   };
 
   document.body.appendChild(botonInfo);
+
+botonConfetti = document.createElement("button");
+botonConfetti.innerText = "Celebrar 🎉";
+botonConfetti.className = "confetti-btn";
+
+botonConfetti.onclick = () => {
+  window.confetti({
+    particleCount: 200,
+    spread: 90,
+    origin: { y: 0.6 }
+  });
+};
+
+document.body.appendChild(botonConfetti);
+
+botonTrivia = document.createElement("button");
+botonTrivia.innerText = "Jugar Trivia ⚽";
+botonTrivia.className = "trivia-btn-ar";
+
+const idMap = { 
+    "ALBANIA": "ALB",
+    "ARABIA": "KSA",
+    "ARGELIA": "ALG",
+    "ARGENTINA": "ARG",
+    "AUSTRALIA": "AUS",
+    "AUSTRIA": "AUT",
+    "BELGICA": "BEL",
+    "BOLIVIA": "BOL",
+    "BRASIL": "BRA",
+    "CANADA": "CAN",
+    "COLOMBIA": "COL",
+    "COSTA DE MARFIL": "CIV",
+    "CROACIA": "CRO",
+    "CURAZAO": "CUR",
+    "ECUADOR": "ECU",
+    "EGIPTO": "EGY",
+    "ESCOCIA": "SCO",
+    "ESPAÑA": "ESP",
+    "EUA": "USA",
+    "FRANCIA": "FRA",
+    "GERMANIA": "ALE",
+    "GHANA": "GHA",
+    "HAITI": "HAI",
+    "HONDURAS": "HON",
+    "INGLATERRA": "ING",
+    "ISLAS CABO VERDE": "CPV",
+    "JAPON": "JPN",
+    "JORDANIA": "JOR",
+    "COREA": "KOR",
+    "MALI": "MLI",
+    "MARRUECOS": "MAR",
+    "MEXICO": "MEX",
+    "NORUEGA": "NOR",
+    "NUEVA ZELANDA": "NZL",
+    "OMAN": "OMA",
+    "PAISES BAJOS": "NED",
+    "PANAMA": "PAN",
+    "PARAGUAY": "PAR",
+    "PORTUGAL": "POR",
+    "QATAR": "QAT",
+    "REPUBLICA DOMINICANA DEL CONGO": "COD",
+    "REPUBLICA DE IRAN": "IRN",
+    "SENEGAL": "SEN",
+    "SUDAFRICA": "RSA",
+    "SUIZA": "SUI",
+    "TUNEZ": "TUN",
+    "URUGUAY": "URU",
+    "UZBEKISTAN": "UZB"
+};
+
+const paisId = idMap[equipo.name.toUpperCase()] || equipo.name.substring(0, 3).toUpperCase();
+
+botonTrivia.onclick = () => {
+    window.location.href = `preguntas.html?pais=${paisId}`;
+};
+
+document.body.appendChild(botonTrivia);
 }
 
 
@@ -634,6 +700,16 @@ if (panelInfo) {
   panelInfo.remove();
   panelInfo = null;
 }
+
+if (botonConfetti) { 
+  botonConfetti.remove(); 
+  botonConfetti = null; 
+}
+
+      if (botonTrivia) { 
+        botonTrivia.remove(); 
+        botonTrivia = null; 
+      }
 
     });
 

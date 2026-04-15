@@ -1,5 +1,10 @@
-body { margin: 0; overflow: hidden; }
+/* --- CONFIGURACIÓN BASE --- */
+body { 
+    margin: 0; 
+    overflow: hidden; 
+}
 
+/* --- OVERLAY DEL ESCÁNER --- */
 #ui-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -7,7 +12,6 @@ body { margin: 0; overflow: hidden; }
     z-index: 10;
     background-color: #1A1A3A;
     pointer-events: none;
-    
     clip-path: polygon(
         0% 0%, 0% 100%, 100% 100%, 100% 0%, 0% 0%, 
         10% 20%, 90% 20%, 90% 80%, 10% 80%, 10% 20%
@@ -43,95 +47,98 @@ body { margin: 0; overflow: hidden; }
     50% { top: 80%; }
 }
 
+
 .back-btn {
     position: fixed;
-    top: 20px; left: 20px;
-     text-decoration: none;
+    top: 20px; 
+    left: 20px;
+    text-decoration: none;
     padding: 10px 20px;
     background: #FFD65C;
     color: #1A1A3A;
     border-radius: 5px;
     font-weight: bold;
-    z-index: 30; 
+    z-index: 1000; 
     pointer-events: auto;
-    text-decoration: none;
 }
 
-.animate-btn {
+.confetti-btn {
     position: fixed;
-    bottom: 22px; right: 22px;
-    z-index: 40;
-    pointer-events: auto;
+    top: 20px;         
+    right: 20px;       
     padding: 12px 18px;
     background: #FFD65C;
     color: #1A1A3A;
     border: none;
-    border-radius: 14px;
+    border-radius: 12px;
     font-weight: bold;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    z-index: 1000;
     cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
-.animate-btn, .info-btn {
-  position: fixed;
-  right: 20px;
-  padding: 12px 18px;
-  background: #FFD65C;
-  border: none;
-  border-radius: 10px;
-  font-weight: bold;
-  z-index: 999;
-}
-
-.animate-btn {
-  bottom: 80px;
-}
 
 .info-btn {
-  bottom: 20px;
-}
-
-.info-panel {
-  position: fixed;
-  left: 20px;
-  bottom: 20px;
-  width: 250px;
-  background: rgba(0,0,0,0.85);
-  color: white;
-  padding: 15px;
-  border-radius: 15px;
-  z-index: 999;
-}
-
-.confetti-btn{
- position: fixed;
-    top: 20px;          
-    right: 20px;       
-    z-index: 1000;      
+    position: fixed;
+    left: 20px;       
+    bottom: 80px;     
     padding: 12px 18px;
     background: #FFD65C;
     color: #1A1A3A;
     border: none;
-    border-radius: 14px;
+    border-radius: 10px;
     font-weight: bold;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    z-index: 1000;
     cursor: pointer;
+    pointer-events: auto;
 }
 
-#loading-screen {
+
+.animate-btn {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(26, 26, 58, 0.8); 
-    color: #FFD65C;
-    padding: 15px 30px;
+    right: 20px;       
+    bottom: 80px;    
+    padding: 12px 18px;
+    background: #FFD65C;
+    color: #1A1A3A;
+    border: none;
     border-radius: 10px;
-    font-family: sans-serif;
     font-weight: bold;
-    z-index: 100; 
-    pointer-events: none;
+    z-index: 1000;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
 }
+
+.trivia-btn-ar {
+    position: fixed;
+    right: 20px;      
+    bottom: 140px;     
+    padding: 12px 18px;
+    background: #1A1A3A; 
+    color: #FFD65C;
+    border: 2px solid #FFD65C;
+    border-radius: 10px;
+    font-weight: bold;
+    z-index: 1000;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+
+.info-panel {
+    position: fixed;
+    left: 20px;
+    bottom: 140px;    
+    width: 250px;
+    background: rgba(0,0,0,0.85);
+    color: white;
+    padding: 15px;
+    border-radius: 15px;
+    z-index: 1001;
+}
+
 
 #loading-overlay {
     position: fixed;

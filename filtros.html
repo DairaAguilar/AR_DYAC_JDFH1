@@ -35,20 +35,20 @@
 
     <div class="container">
         <div class="controls">
-            <div class="control-group">
-                <label>Desenfoque (Blur)</label>
-                <input type="range" id="blur" min="0" max="10" value="0" step="0.1">
-            </div>
-            <div class="control-group">
-                <label>Contraste</label>
-                <input type="range" id="contrast" min="50" max="200" value="100">
-            </div>
-            <div class="control-group">
-                <label>Brillo</label>
-                <input type="range" id="brightness" min="50" max="200" value="100">
-            </div>
-            <button id="resetFilters">Restablecer Filtros</button>
-        </div>
+    <div class="control-group">
+        <label>Desenfoque (Blur)</label>
+        <input type="range" id="blur" min="0" max="10" value="0" step="0.1">
+    </div>
+    <div class="control-group">
+        <label>Pixelado</label>
+        <input type="range" id="pixelation" min="1" max="50" value="1">
+    </div>
+    <div class="control-group">
+        <label>Alta Saturación</label>
+        <input type="range" id="saturate" min="100" max="500" value="100">
+    </div>
+    <button id="resetFilters">Restablecer Filtros</button>
+</div>
 
         <div class="video-container">
             <video id="videoInput" style="display:none;" loop muted playsinline>
@@ -110,7 +110,6 @@
                         { name: "TÚNEZ", vid: "TUNEZ.mp4", img: "TUNEZ.png" },
                         { name: "URUGUAY", vid: "URUGUAY.mp4", img: "URUGUAY.png" },
                         { name: "UZBEKISTÁN", vid: "UZBEKISTAN.mp4", img: "UZBEKISTAN.png" }
-                        //AGREGA LOS OTROS 6 PASIES
                     ];
 
                     equipos.forEach(equipo => {

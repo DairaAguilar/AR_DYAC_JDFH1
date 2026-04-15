@@ -1,16 +1,16 @@
 
        .quiz-card {
     background: rgba(255, 255, 255, 0.05);
-    padding: 20px; /* Aumenté un poco el padding para que el texto no pegue al borde */
+    padding: 20px; 
     border-radius: 20px;
     border: 2px solid var(--yellow);
-    width: 90%; /* Ocupará el 90% del ancho de la pantalla en móviles */
-    max-width: 450px; /* Pero nunca crecerá más de 450px en pantallas grandes */
-    margin: 20px auto; /* Lo centra horizontalmente y le da aire arriba/abajo */
-    box-sizing: border-box; /* Crucial para que el padding no sume al ancho total */
+    width: 90%;
+    max-width: 450px; 
+    margin: 20px auto; 
+    box-sizing: border-box;
 }
        .progress-bar {
-    width: 100%; /* Que use el 100% de su contenedor (.quiz-card) */
+    width: 100%; 
     max-width: 430px;
     height: 10px;
     background: #1A1A3A;
@@ -29,7 +29,7 @@
     grid-template-columns: 1fr;
     gap: 10px;
     margin-top: 25px;
-    width: 100%; /* Cambiado de max-width a width para que sea fluido */
+    width: 100%; 
 }
         .option-btn {
     background: transparent;
@@ -41,7 +41,7 @@
     transition: all 0.2s;
     font-size: 1rem;
     text-align: left;
-    width: 100%; /* Asegura que el botón use todo el ancho disponible */
+    width: 100%; 
     box-sizing: border-box;
 }
         .option-btn:hover {
