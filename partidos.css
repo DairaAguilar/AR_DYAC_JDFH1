@@ -36,34 +36,4 @@
             font-size: 0.9rem;
             opacity: 0.8;
         }
-    .back-btn {
-    position: fixed;
-    top: 85px; 
-    left: 20px;
-    z-index: 1000;
-    background-color: var(--yellow, #FFD65C);
-    color: #000;
-    padding: 10px 20px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: bold;
-    font-family: sans-serif;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.back-btn:hover {
-    background-color: #fff;
-    transform: scale(1.05);
-}
-
-@media (max-width: 768px) {
-    .back-btn {
-        top: 80px;
-        padding: 8px 15px;
-        font-size: 0.9rem;
-    }
-}
+    

@@ -4,7 +4,7 @@ body {
     font-family: 'Segoe UI', sans-serif;
     margin: 0;
     padding: 0;   
-     text-align: center;
+    text-align: center;
 }
 
 .contenedor-mapa {
@@ -14,7 +14,7 @@ body {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-    margin: 20px auto; 
+    margin: 20px auto;
 }
 
 .mapa-img {
@@ -35,7 +35,6 @@ body {
     transform: translate(-50%, -50%);
     z-index: 10;
     border-radius: 4px;  
-
     text-decoration: none; 
     font-weight: bold;
     font-size: 10px;      
@@ -46,5 +45,71 @@ body {
 
 .pin:hover {
     background: #ffffff;
-    transform: translate(-50%, -50%) scale(1.2); 
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+/* ========== ESTILOS PARA COMPUTADORA (pantallas grandes) ========== */
+@media (min-width: 768px) {
+    .contenedor-mapa {
+        max-width: 90%; /* Más ancho en computadora */
+        margin: 30px auto;
+    }
+    
+    .pin {
+        padding: 8px 15px;     /* Botones más grandes */
+        font-size: 14px;       /* Texto más grande */
+        border-radius: 8px;    /* Bordes más redondeados */
+        font-weight: bold;
+        transition: 0.2s;
+    }
+    
+    .pin:hover {
+        transform: translate(-50%, -50%) scale(1.15);
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+}
+
+/* Para laptops grandes (pantallas muy anchas) */
+@media (min-width: 1200px) {
+    .contenedor-mapa {
+        max-width: 80%; /* Aún más ancho en pantallas muy grandes */
+        margin: 40px auto;
+    }
+    
+    .pin {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 10px;
+    }
+}
+
+/* Celular (por defecto) */
+.contenedor-mapa {
+    width: 95%;
+    max-width: 95%;
+}
+
+/* Tablets y computadoras */
+@media (min-width: 768px) {
+    .contenedor-mapa {
+        width: 800px;
+        max-width: 90%;
+    }
+}
+
+/* Laptops grandes */
+@media (min-width: 1024px) {
+    .contenedor-mapa {
+        width: 1000px;
+        max-width: 85%;
+    }
+}
+
+/* Pantallas muy grandes */
+@media (min-width: 1440px) {
+    .contenedor-mapa {
+        width: 1200px;
+        max-width: 80%;
+    }
 }

@@ -62,10 +62,11 @@ body {
     pointer-events: auto;
 }
 
+/* Modificar el botón de confetti para que esté a la misma altura que Actualizar */
 .confetti-btn {
     position: fixed;
-    top: 20px;         
-    right: 20px;       
+    top: 80px;              /* Cambiado de 20px a 80px para alinear con Actualizar */
+    right: 20px;
     padding: 12px 18px;
     background: #FFD65C;
     color: #1A1A3A;
@@ -76,6 +77,27 @@ body {
     cursor: pointer;
     pointer-events: auto;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Estilo para el nombre del jugador - AHORA ARRIBA DEL MODELO */
+#nombre-jugador {
+    position: fixed;
+    top: 15% !important;    /* Cambiado de bottom a top */
+    bottom: auto !important;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #FFD65C;
+    font-size: 28px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    background-color: rgba(26,26,58,0.85);
+    padding: 8px 24px;
+    border-radius: 40px;
+    border: 2px solid #FFD65C;
+    z-index: 1003;
+    white-space: nowrap;
+    text-align: center;
 }
 
 
@@ -144,6 +166,84 @@ body {
     z-index: 1001;
 }
 
+.modal-trivia {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #1A1A3A 0%, #2a2a5a 100%);
+  width: 85%;              /* ← Reducido de 90% a 85% */
+  max-width: 400px;        /* ← Reducido de 500px a 400px */
+  max-height: 55vh;        /* ← Reducido de 60vh a 55vh */
+  border-radius: 20px;
+  border: 3px solid #FFD65C;
+  padding: 15px;           /* ← Reducido de 20px a 15px */
+  position: relative;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  margin-top: 25vh;        /* ← Ajustado para que no tape el modelo */
+}
+
+.modal-title {
+  text-align: center;
+  color: #FFD65C;
+  font-size: 1.4rem;       /* ← Reducido de 1.8rem a 1.4rem */
+  margin-bottom: 15px;     /* ← Reducido */
+  font-family: sans-serif;
+}
+
+.option-btn-modal {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 8px 12px;       /* ← Reducido de 12px a 8px */
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;      /* ← Reducido de 0.95rem a 0.85rem */
+  text-align: left;
+}
+
+.quiz-card-modal {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;           /* ← Reducido de 20px a 12px */
+  border-radius: 15px;
+  border: 1px solid #FFD65C;
+}
+
+.final-score-modal {
+  font-size: 1.5rem;       /* ← Reducido de 2rem a 1.5rem */
+  margin: 15px 0;
+  color: #FFD65C;
+}
+
+/* Asegurar que el modelo en pantalla se vea bien */
+#modelo-pantalla-contenedor canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+#mensaje-actualizacion {
+    animation: fadeOut 2s ease forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    70% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-20px); visibility: hidden; }
+}
 
 #loading-overlay {
     position: fixed;

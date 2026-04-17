@@ -67,16 +67,4 @@
             border-bottom: 3px solid var(--accent);
         }
 
-        .back-btn { 
-              display: block;    
-    width: fit-content;
-    margin: 20px 0 10px 0px; 
-    text-decoration: none;
-    background-color: #FFD65C;
-    color: #1A1A3A;
-    padding: 8px 15px;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 14px;
-    transition: 0.3s;
-        }
+    

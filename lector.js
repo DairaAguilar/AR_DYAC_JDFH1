@@ -1,17 +1,23 @@
-
-
 document.addEventListener('DOMContentLoaded', () => {
 
   const sceneEl = document.querySelector('#ar-scene');
   const textureLoader = new THREE.TextureLoader();
   const loadingOverlay = document.getElementById('loading-overlay');
   
-let botonActual = null;
-let botonInfo = null;
-let panelInfo = null;
-let botonConfetti = null;
+  let botonActual = null;
+  let botonInfo = null;
+  let panelInfo = null;
+  let botonConfetti = null;
+  let botonActualizar = null;
+  
+  // Variable para almacenar el modelo actual (anclado en pantalla)
+  let modeloPantalla = null;
+  let modeloPantallaEntity = null;
+  let animado = false;
+  let equipoActual = null;
+  let contenidoHolderGlobal = null;
 
-sceneEl.addEventListener("arReady", (event) => {
+  sceneEl.addEventListener("arReady", (event) => {
     console.log("MindAR está listo");
     loadingOverlay.style.opacity = "0";
     setTimeout(() => {
@@ -25,7 +31,7 @@ sceneEl.addEventListener("arReady", (event) => {
     if(p) p.innerText = "Error al acceder a la cámara.";
   });
 
-const mostrarCargando = (ver) => {
+  const mostrarCargando = (ver) => {
     let loader = document.getElementById('loading-screen');
     if (!loader) {
       loader = document.createElement('div');
@@ -37,7 +43,232 @@ const mostrarCargando = (ver) => {
     loader.style.display = ver ? 'block' : 'none';
   };
 
-   const equipos = [
+ function crearModeloEnPantalla(equipo, esAnimado = false) {
+  return new Promise((resolve) => {
+    mostrarCargando(true);
+    
+    // Crear contenedor para el modelo en pantalla - MÁS GRANDE
+    const contenedorPantalla = document.createElement('div');
+    contenedorPantalla.id = 'modelo-pantalla-contenedor';
+    contenedorPantalla.style.position = 'fixed';
+    contenedorPantalla.style.bottom = '45%';
+    contenedorPantalla.style.left = '50%';
+    contenedorPantalla.style.transform = 'translateX(-50%)';
+    contenedorPantalla.style.width = '700px';    // ← AUMENTADO
+    contenedorPantalla.style.height = '700px';   // ← AUMENTADO
+    contenedorPantalla.style.zIndex = '1002';
+    contenedorPantalla.style.pointerEvents = 'none';
+    document.body.appendChild(contenedorPantalla);
+    
+    // Nombre del jugador debajo
+// Nombre del jugador ARRIBA del modelo
+const nombreJugador = document.createElement('div');
+nombreJugador.id = 'nombre-jugador';
+nombreJugador.innerText = equipo.player;
+nombreJugador.style.position = 'fixed';
+nombreJugador.style.top = '15%';     // ← Cambiado de bottom a top
+nombreJugador.style.left = '50%';
+nombreJugador.style.transform = 'translateX(-50%)';
+nombreJugador.style.color = '#FFD65C';
+nombreJugador.style.fontSize = '28px';
+nombreJugador.style.fontWeight = 'bold';
+nombreJugador.style.fontFamily = 'Arial, sans-serif';
+nombreJugador.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5)';
+nombreJugador.style.backgroundColor = 'rgba(26,26,58,0.85)';
+nombreJugador.style.padding = '8px 24px';
+nombreJugador.style.borderRadius = '40px';
+nombreJugador.style.border = '2px solid #FFD65C';
+nombreJugador.style.zIndex = '1003';
+nombreJugador.style.whiteSpace = 'nowrap';
+nombreJugador.style.textAlign = 'center';
+document.body.appendChild(nombreJugador);
+    
+    // Crear canvas - TAMAÑO CORRESPONDIENTE
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(700, 700);  // ← AUMENTADO
+    renderer.setClearColor(0x000000, 0);
+    contenedorPantalla.appendChild(renderer.domElement);
+    
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+    camera.position.set(0, 1.5, 3.5);  // ← CÁMARA MÁS ALEJADA
+    camera.lookAt(0, 1, 0);
+    
+    // Iluminación
+    const ambientLight = new THREE.AmbientLight(0x404040);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(1, 2, 1);
+    scene.add(directionalLight);
+    const backLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    backLight.position.set(0, 1, -1);
+    scene.add(backLight);
+    
+    // Cargar modelo GLB
+    const loader = new THREE.GLTFLoader();
+    const modeloUrl = esAnimado ? './modelos/jugador_animado2.glb' : './modelos/jugador_base2.glb';
+    
+    loader.load(modeloUrl, async (gltf) => {
+      const model = gltf.scene;
+      model.scale.set(1.2, 1.2, 1.2);  // ← TU ESCALA
+      model.position.set(0, -0.5, 0);   // ← AJUSTADO para que no se corte abajo
+      
+      // Aplicar texturas
+      await aplicarTexturasTHREE(model, equipo.bodyTex, equipo.headTex);
+      
+      scene.add(model);
+      
+      // Animación si es necesario
+      let mixer = null;
+      if (esAnimado && gltf.animations.length > 0) {
+        mixer = new THREE.AnimationMixer(model);
+        const action = mixer.clipAction(gltf.animations[0]);
+        action.play();
+      }
+      
+      // Función de animación
+      let lastTime = 0;
+      function animate() {
+        requestAnimationFrame(animate);
+        const now = performance.now();
+        const delta = Math.min(1/30, (now - lastTime) / 1000);
+        lastTime = now;
+        
+        if (mixer) mixer.update(delta);
+        renderer.render(scene, camera);
+      }
+      animate();
+      
+      mostrarCargando(false);
+      resolve({ model, mixer, renderer, contenedor: contenedorPantalla });
+    }, undefined, (error) => {
+      console.error('Error cargando modelo:', error);
+      mostrarCargando(false);
+      resolve(null);
+    });
+  });
+}
+
+  // Función para aplicar texturas a un modelo THREE.js
+  async function aplicarTexturasTHREE(model, bodyTex, headTex) {
+    const bodyTexture = await cargarTextura(bodyTex);
+    const headTexture = await cargarTextura(headTex);
+    
+    model.traverse(node => {
+      if (node.isMesh) {
+        if (node.material && node.material.name === "SHD_Body") {
+          node.material.map = bodyTexture;
+          node.material.needsUpdate = true;
+        }
+        if (node.material && node.material.name === "SHD_Head") {
+          node.material.map = headTexture;
+          node.material.needsUpdate = true;
+        }
+      }
+    });
+  }
+  
+  function cargarTextura(src) {
+    return new Promise((resolve) => {
+      textureLoader.load(src, tex => {
+        tex.flipY = false;
+        resolve(tex);
+      });
+    });
+  }
+  
+  // Función para eliminar modelo de pantalla
+  function eliminarModeloPantalla() {
+    if (modeloPantallaEntity) {
+      if (modeloPantallaEntity.contenedor) {
+        modeloPantallaEntity.contenedor.remove();
+      }
+      if (modeloPantallaEntity.renderer) {
+        modeloPantallaEntity.renderer.dispose();
+      }
+      modeloPantallaEntity = null;
+    }
+    modeloPantalla = null;
+  }
+  
+  // Función para cambiar a modo animado en el modelo de pantalla
+  async function cambiarAModoAnimado() {
+    if (!equipoActual) return;
+    
+    eliminarModeloPantalla();
+    
+    const resultado = await crearModeloEnPantalla(equipoActual, true);
+    if (resultado) {
+      modeloPantallaEntity = resultado;
+      animado = true;
+      if (botonActual) botonActual.innerText = "Detener animación";
+    }
+  }
+
+  async function cambiarAModoBase() {
+    if (!equipoActual) return;
+    
+    eliminarModeloPantalla();
+    
+    const resultado = await crearModeloEnPantalla(equipoActual, false);
+    if (resultado) {
+      modeloPantallaEntity = resultado;
+      animado = false;
+      if (botonActual) botonActual.innerText = "Animar";
+    }
+  }
+  
+  function refrescarEscena() {
+    eliminarModeloPantalla();
+    equipoActual = null;
+    animado = false;
+    
+    if (botonActual) {
+      botonActual.remove();
+      botonActual = null;
+    }
+    if (botonInfo) {
+      botonInfo.remove();
+      botonInfo = null;
+    }
+    if (panelInfo) {
+      panelInfo.remove();
+      panelInfo = null;
+    }
+    if (botonConfetti) {
+      botonConfetti.remove();
+      botonConfetti = null;
+    }
+    if (botonTrivia) {
+      botonTrivia.remove();
+      botonTrivia = null;
+    }
+    
+    // Mostrar mensaje de que puede escanear otra bandera
+    const mensaje = document.createElement('div');
+    mensaje.id = 'mensaje-actualizacion';
+    mensaje.innerText = '✅ Listo para escanear otra bandera';
+    mensaje.style.position = 'fixed';
+    mensaje.style.bottom = '20px';
+    mensaje.style.left = '50%';
+    mensaje.style.transform = 'translateX(-50%)';
+    mensaje.style.backgroundColor = '#FFD65C';
+    mensaje.style.color = '#1A1A3A';
+    mensaje.style.padding = '10px 20px';
+    mensaje.style.borderRadius = '10px';
+    mensaje.style.fontWeight = 'bold';
+    mensaje.style.zIndex = '1003';
+    mensaje.style.fontFamily = 'sans-serif';
+    document.body.appendChild(mensaje);
+    
+    setTimeout(() => {
+      if (mensaje) mensaje.remove();
+    }, 2000);
+  }
+  
+  let botonTrivia = null;
+
+  const equipos = [
     { 
       name: "ARGELIA", 
       player: "MAHREZ", 
@@ -376,89 +607,55 @@ const mostrarCargando = (ver) => {
       headTex: "./modelos/texturas/Cara_I.png",
       info: "Uzbekistán ganó los Juegos Asiáticos en 1994. Su capital es Taskent."
     },
-//EQUIPOS PROVISIONALES/////////////////////////////////////////////////////////
-   { 
-  name: "ALBANIA", 
-  player: "BROJA", 
-  bodyTex: "./modelos/texturas/ALBANIA.png", 
-  bodyTexAnim: "./modelos/texturas/ALBANIA.png", 
-  headTex: "./modelos/texturas/Cara_I.png",
-  info: "Tras destacar en la Eurocopa, Albania busca su primera cita mundialista."
-},
-{ 
-  name: "BOLIVIA", 
-  player: "MIGUEL TERCEROS", 
-  bodyTex: "./modelos/texturas/BOLIVIA.png", 
-  bodyTexAnim: "./modelos/texturas/BOLIVIA.png", 
-  headTex: "./modelos/texturas/Cara_I.png",
-  info: "La Verde busca aprovechar la altura de El Alto para volver a una cita mundialista."
-},
- { 
-  name: "HONDURAS", 
-  player: "LUIS PALMA", 
-  bodyTex: "./modelos/texturas/HONDURAS.png", 
-  bodyTexAnim: "./modelos/texturas/HONDURAS.png", 
-  headTex: "./modelos/texturas/Cara_V.png",
-  info: "Honduras busca su cuarta participación mundialista en 2026."
-},
-{ 
-  name: "MALI", 
-  player: "BISSOUMA", 
-  bodyTex: "./modelos/texturas/MALI.png", 
-  bodyTexAnim: "./modelos/texturas/MALI.png", 
-  headTex: "./modelos/texturas/Cara_III.png",
-  info: "Mali busca su histórico debut en un Mundial mayor tras brillar en juveniles."
-},
-{ 
-  name: "OMAN", 
-  player: "AL-YAHYAEI", 
-  bodyTex: "./modelos/texturas/OMAN.png", 
-  bodyTexAnim: "./modelos/texturas/OMAN.png", 
-  headTex: "./modelos/texturas/Cara_III.png",
-  info: "Una selección asiática en constante crecimiento que busca dar la sorpresa."
-},
-{ 
-  name: "REPUBLICA DOMINICANA DEL CONGO", 
-  player: "WISSA", 
-  bodyTex: "./modelos/texturas/RDCONGO.png", 
-  bodyTexAnim: "./modelos/texturas/RDCONGO.png", 
-  headTex: "./modelos/texturas/Cara_III.png",
-  info: "Una de las selecciones más fuertes de África en la actualidad."
-}
-];
-
-  function cargarTextura(src) {
-    return new Promise(resolve => {
-      textureLoader.load(src, tex => {
-        tex.flipY = false;
-        resolve(tex);
-      });
-    });
-  }
-
-  async function aplicarTexturas(mesh, bodyTex, headTex) {
-
-    const body = await cargarTextura(bodyTex);
-    const head = await cargarTextura(headTex);
-
-    mesh.traverse(node => {
-
-      if (!node.isMesh) return;
-
-      if (node.material.name === "SHD_Body") {
-        node.material.map = body;
-        node.material.needsUpdate = true;
-      }
-
-      if (node.material.name === "SHD_Head") {
-        node.material.map = head;
-        node.material.needsUpdate = true;
-      }
-
-    });
-  }
-
-
+    { 
+      name: "ALBANIA", 
+      player: "BROJA", 
+      bodyTex: "./modelos/texturas/ALBANIA.png", 
+      bodyTexAnim: "./modelos/texturas/ALBANIA.png", 
+      headTex: "./modelos/texturas/Cara_I.png",
+      info: "Tras destacar en la Eurocopa, Albania busca su primera cita mundialista."
+    },
+    { 
+      name: "BOLIVIA", 
+      player: "MIGUEL TERCEROS", 
+      bodyTex: "./modelos/texturas/BOLIVIA.png", 
+      bodyTexAnim: "./modelos/texturas/BOLIVIA.png", 
+      headTex: "./modelos/texturas/Cara_I.png",
+      info: "La Verde busca aprovechar la altura de El Alto para volver a una cita mundialista."
+    },
+    { 
+      name: "HONDURAS", 
+      player: "LUIS PALMA", 
+      bodyTex: "./modelos/texturas/HONDURAS.png", 
+      bodyTexAnim: "./modelos/texturas/HONDURAS.png", 
+      headTex: "./modelos/texturas/Cara_V.png",
+      info: "Honduras busca su cuarta participación mundialista en 2026."
+    },
+    { 
+      name: "MALI", 
+      player: "BISSOUMA", 
+      bodyTex: "./modelos/texturas/MALI.png", 
+      bodyTexAnim: "./modelos/texturas/MALI.png", 
+      headTex: "./modelos/texturas/Cara_III.png",
+      info: "Mali busca su histórico debut en un Mundial mayor tras brillar en juveniles."
+    },
+    { 
+      name: "OMAN", 
+      player: "AL-YAHYAEI", 
+      bodyTex: "./modelos/texturas/OMAN.png", 
+      bodyTexAnim: "./modelos/texturas/OMAN.png", 
+      headTex: "./modelos/texturas/Cara_III.png",
+      info: "Una selección asiática en constante crecimiento que busca dar la sorpresa."
+    },
+    { 
+      name: "REPUBLICA DOMINICANA DEL CONGO", 
+      player: "WISSA", 
+      bodyTex: "./modelos/texturas/RDCONGO.png", 
+      bodyTexAnim: "./modelos/texturas/RDCONGO.png", 
+      headTex: "./modelos/texturas/Cara_III.png",
+      info: "Una de las selecciones más fuertes de África en la actualidad."
+    }
+  ];
 
   equipos.forEach((equipo, index) => {
 
@@ -469,248 +666,139 @@ const mostrarCargando = (ver) => {
     contentHolder.setAttribute('position', '0 0 0.01');
     targetEntity.appendChild(contentHolder);
 
-    let modeloActual = null;
-    let animado = false;
-
-    const textEl = document.createElement('a-text');
-    textEl.setAttribute('value', equipo.player);
-    textEl.setAttribute('color', '#FFD65C');
-    textEl.setAttribute('align', 'center');
-    textEl.setAttribute('width', '3');
-    textEl.setAttribute('position', '0 -0.12 0.1');
-
-    contentHolder.appendChild(textEl);
-
-    function crearModeloBase() {
-      mostrarCargando(true); // Mostrar mensaje
-      const modelEl = document.createElement('a-gltf-model');
-
-      modelEl.setAttribute('src', '#jugador-base');
-      modelEl.setAttribute('scale', '0.5 0.5 0.5');
-      modelEl.setAttribute('material', 'side: double');
-      modelEl.setAttribute('visible', 'false');
-
-      modelEl.addEventListener("model-loaded", async () => {
-        await aplicarTexturas(
-          modelEl.getObject3D('mesh'),
-          equipo.bodyTex,
-          equipo.headTex
-        );
-        modelEl.setAttribute('visible', 'true');
-        mostrarCargando(false); // Ocultar al terminar
-      });
-
-      contentHolder.appendChild(modelEl);
-      modeloActual = modelEl;
-    }
-
-    function crearModeloAnimado() {
-      mostrarCargando(true); // Mostrar mensaje
-      const animatedModel = document.createElement('a-gltf-model');
-
-      animatedModel.setAttribute('src', '#jugador-animado');
-      animatedModel.setAttribute('scale', '0.5 0.5 0.5');
-      animatedModel.setAttribute('position', '0 0 0.01');
-      animatedModel.setAttribute('animation-mixer', 'clip: *; loop: repeat');
-      animatedModel.setAttribute('material', 'side: double');
-      animatedModel.setAttribute('visible', 'false');
-
-      animatedModel.addEventListener("model-loaded", async () => {
-        await aplicarTexturas(
-          animatedModel.getObject3D('mesh'),
-          equipo.bodyTexAnim || equipo.bodyTex,
-          equipo.headTex
-        );
-        animatedModel.setAttribute('visible', 'true');
-        mostrarCargando(false); // Ocultar al terminar
-      });
-
-      contentHolder.appendChild(animatedModel);
-      modeloActual = animatedModel;
-    }
-
-    let botonTrivia = null;
-
-    targetEntity.addEventListener("targetFound", () => {
-
-      if (!modeloActual) {
-        crearModeloBase();
+    targetEntity.addEventListener("targetFound", async () => {
+      
+      // Si ya hay un modelo en pantalla, no hacer nada (evitar duplicados)
+      if (modeloPantallaEntity) return;
+      
+      // Guardar equipo actual
+      equipoActual = equipo;
+      
+      // Crear modelo anclado en pantalla (no en AR)
+      const resultado = await crearModeloEnPantalla(equipo, false);
+      if (resultado) {
+        modeloPantallaEntity = resultado;
       }
-
+      
+      // Crear botón de animar si no existe
       if (!botonActual) {
-
         botonActual = document.createElement('button');
         botonActual.className = 'animate-btn';
         botonActual.innerText = 'Animar';
-
-        botonActual.onclick = () => {
-
-          contentHolder.removeChild(modeloActual);
-
+        
+        botonActual.onclick = async () => {
+          if (!equipoActual) return;
+          
           if (!animado) {
-
-            crearModeloAnimado();
-            botonActual.innerText = "Detener animación";
-            animado = true;
-
+            await cambiarAModoAnimado();
           } else {
-
-            crearModeloBase();
-            botonActual.innerText = "Animar";
-            animado = false;
-
+            await cambiarAModoBase();
           }
-
         };
-
+        
         document.body.appendChild(botonActual);
       }
-
+      
+      // Botón de información
       if (!botonInfo) {
-
-  botonInfo = document.createElement('button');
-  botonInfo.className = 'info-btn';
-  botonInfo.innerText = 'Info';
-
-  botonInfo.onclick = () => {
-
-    if (!panelInfo) {
-
-      panelInfo = document.createElement('div');
-      panelInfo.className = 'info-panel';
-      panelInfo.innerHTML = `
-        <h2>${equipo.name}</h2>
-        <p>${equipo.info}</p>
-      `;
-
-      document.body.appendChild(panelInfo);
-
-    } else {
-
-      panelInfo.remove();
-      panelInfo = null;
-
-    }
-
-  };
-
-  document.body.appendChild(botonInfo);
-
-botonConfetti = document.createElement("button");
-botonConfetti.innerText = "Celebrar 🎉";
-botonConfetti.className = "confetti-btn";
-
-botonConfetti.onclick = () => {
-  window.confetti({
-    particleCount: 200,
-    spread: 90,
-    origin: { y: 0.6 }
-  });
+        botonInfo = document.createElement('button');
+        botonInfo.className = 'info-btn';
+        botonInfo.innerText = 'Info';
+        
+        botonInfo.onclick = () => {
+          if (!panelInfo) {
+            panelInfo = document.createElement('div');
+            panelInfo.className = 'info-panel';
+            panelInfo.innerHTML = `
+              <h2>${equipo.name}</h2>
+              <p>${equipo.info}</p>
+            `;
+            document.body.appendChild(panelInfo);
+          } else {
+            panelInfo.remove();
+            panelInfo = null;
+          }
+        };
+        
+        document.body.appendChild(botonInfo);
+      }
+      
+      // Botón de confetti
+      if (!botonConfetti) {
+        botonConfetti = document.createElement("button");
+        botonConfetti.innerText = "Celebrar 🎉";
+        botonConfetti.className = "confetti-btn";
+        
+        botonConfetti.onclick = () => {
+          window.confetti({
+            particleCount: 200,
+            spread: 90,
+            origin: { y: 0.6 }
+          });
+        };
+        
+        document.body.appendChild(botonConfetti);
+      }
+      
+      // Botón de trivia
+      if (!botonTrivia) {
+        botonTrivia = document.createElement("button");
+        botonTrivia.innerText = "Jugar Trivia ⚽";
+        botonTrivia.className = "trivia-btn-ar";
+        
+        const idMap = { 
+          "ALBANIA": "ALB", "ARABIA": "KSA", "ARGELIA": "ALG", "ARGENTINA": "ARG",
+          "AUSTRALIA": "AUS", "AUSTRIA": "AUT", "BELGICA": "BEL", "BOLIVIA": "BOL",
+          "BRASIL": "BRA", "CANADA": "CAN", "COLOMBIA": "COL", "COSTA DE MARFIL": "CIV",
+          "CROACIA": "CRO", "CURAZAO": "CUR", "ECUADOR": "ECU", "EGIPTO": "EGY",
+          "ESCOCIA": "SCO", "ESPAÑA": "ESP", "EUA": "USA", "FRANCIA": "FRA",
+          "GERMANIA": "ALE", "GHANA": "GHA", "HAITI": "HAI", "HONDURAS": "HON",
+          "INGLATERRA": "ING", "ISLAS DEL CABOVERDE": "CPV", "JAPON": "JPN", "JORDANIA": "JOR",
+          "KOREA": "KOR", "MALI": "MLI", "MARRUECOS": "MAR", "MEXICO": "MEX",
+          "NORUEGA": "NOR", "NUEVA ZELANDA": "NZL", "OMAN": "OMA", "PAISES BAJOS": "NED",
+          "PANAMA": "PAN", "PARAGUAY": "PAR", "PORTUGAL": "POR", "QATAR": "QAT",
+          "REPUBLICA DOMINICANA DEL CONGO": "COD", "REPUBLICA DE IRAN": "IRN", "SENEGAL": "SEN",
+          "SUDAFRICA": "RSA", "SUIZA": "SUI", "TUNEZ": "TUN", "URUGUAY": "URU", "UZBEKISTAN": "UZB"
+        };
+        
+        const paisId = idMap[equipo.name.toUpperCase()] || equipo.name.substring(0, 3).toUpperCase();
+        
+        botonTrivia.onclick = () => {
+  // Usar el modal en lugar de redirigir
+  if (typeof abrirTriviaModal === 'function') {
+    const paisId = idMap[equipo.name.toUpperCase()] || equipo.name.substring(0, 3).toUpperCase();
+    abrirTriviaModal(paisId, equipo.name);
+  } else {
+    console.error("Función abrirTriviaModal no encontrada");
+  }
 };
-
-document.body.appendChild(botonConfetti);
-
-botonTrivia = document.createElement("button");
-botonTrivia.innerText = "Jugar Trivia ⚽";
-botonTrivia.className = "trivia-btn-ar";
-
-const idMap = { 
-    "ALBANIA": "ALB",
-    "ARABIA": "KSA",
-    "ARGELIA": "ALG",
-    "ARGENTINA": "ARG",
-    "AUSTRALIA": "AUS",
-    "AUSTRIA": "AUT",
-    "BELGICA": "BEL",
-    "BOLIVIA": "BOL",
-    "BRASIL": "BRA",
-    "CANADA": "CAN",
-    "COLOMBIA": "COL",
-    "COSTA DE MARFIL": "CIV",
-    "CROACIA": "CRO",
-    "CURAZAO": "CUR",
-    "ECUADOR": "ECU",
-    "EGIPTO": "EGY",
-    "ESCOCIA": "SCO",
-    "ESPAÑA": "ESP",
-    "EUA": "USA",
-    "FRANCIA": "FRA",
-    "GERMANIA": "ALE",
-    "GHANA": "GHA",
-    "HAITI": "HAI",
-    "HONDURAS": "HON",
-    "INGLATERRA": "ING",
-    "ISLAS CABO VERDE": "CPV",
-    "JAPON": "JPN",
-    "JORDANIA": "JOR",
-    "COREA": "KOR",
-    "MALI": "MLI",
-    "MARRUECOS": "MAR",
-    "MEXICO": "MEX",
-    "NORUEGA": "NOR",
-    "NUEVA ZELANDA": "NZL",
-    "OMAN": "OMA",
-    "PAISES BAJOS": "NED",
-    "PANAMA": "PAN",
-    "PARAGUAY": "PAR",
-    "PORTUGAL": "POR",
-    "QATAR": "QAT",
-    "REPUBLICA DOMINICANA DEL CONGO": "COD",
-    "REPUBLICA DE IRAN": "IRN",
-    "SENEGAL": "SEN",
-    "SUDAFRICA": "RSA",
-    "SUIZA": "SUI",
-    "TUNEZ": "TUN",
-    "URUGUAY": "URU",
-    "UZBEKISTAN": "UZB"
-};
-
-const paisId = idMap[equipo.name.toUpperCase()] || equipo.name.substring(0, 3).toUpperCase();
-
-botonTrivia.onclick = () => {
-    window.location.href = `preguntas.html?pais=${paisId}`;
-};
-
-document.body.appendChild(botonTrivia);
-}
-
-
+        
+        document.body.appendChild(botonTrivia);
+      }
+      
+      // Botón de actualizar
+      if (!botonActualizar) {
+        botonActualizar = document.createElement("button");
+        botonActualizar.innerText = "Actualizar 🔄";
+        botonActualizar.className = "confetti-btn";
+        botonActualizar.style.right = "auto";
+        botonActualizar.style.left = "20px";
+        botonActualizar.style.top = "80px";
+        botonActualizar.style.bottom = "auto";
+        
+        botonActualizar.onclick = () => {
+          refrescarEscena();
+        };
+        
+        document.body.appendChild(botonActualizar);
+      }
+      
     });
 
     targetEntity.addEventListener("targetLost", () => {
-
-      if (modeloActual) {
-        contentHolder.removeChild(modeloActual);
-        modeloActual = null;
-      }
-
-      animado = false;
-
-      if (botonActual) {
-        botonActual.remove();
-        botonActual = null;
-      }
-
-      if (botonInfo) {
-  botonInfo.remove();
-  botonInfo = null;
-}
-
-if (panelInfo) {
-  panelInfo.remove();
-  panelInfo = null;
-}
-
-if (botonConfetti) { 
-  botonConfetti.remove(); 
-  botonConfetti = null; 
-}
-
-      if (botonTrivia) { 
-        botonTrivia.remove(); 
-        botonTrivia = null; 
-      }
-
+      // NO hacemos nada cuando se pierde la bandera
+      // El modelo permanece en pantalla
+      console.log("Bandera perdida, pero modelo permanece");
     });
 
     sceneEl.appendChild(targetEntity);

@@ -35,26 +35,29 @@
 
     <div class="container">
         <div class="controls">
-    <div class="control-group">
-        <label>Desenfoque (Blur)</label>
-        <input type="range" id="blur" min="0" max="10" value="0" step="0.1">
-    </div>
-    <div class="control-group">
-        <label>Pixelado</label>
-        <input type="range" id="pixelation" min="1" max="50" value="1">
-    </div>
-    <div class="control-group">
-        <label>Alta Saturación</label>
-        <input type="range" id="saturate" min="100" max="500" value="100">
-    </div>
-    <button id="resetFilters">Restablecer Filtros</button>
-</div>
+            <div class="control-group">
+                <label>Desenfoque (Blur)</label>
+                <input type="range" id="blur" min="0" max="10" value="0" step="0.1">
+            </div>
+            <div class="control-group">
+                <label>Pixelado</label>
+                <input type="range" id="pixelation" min="1" max="50" value="1">
+            </div>
+            <div class="control-group">
+                <label>Alta Saturación</label>
+                <input type="range" id="saturate" min="100" max="500" value="100">
+            </div>
+            <button id="resetFilters">Restablecer Filtros</button>
+        </div>
 
         <div class="video-container">
             <video id="videoInput" style="display:none;" loop muted playsinline>
                 <source src="./video/ARGENTINA.mp4" type="video/mp4">
             </video>
             <canvas id="videoCanvas"></canvas>
+            
+            <!-- Botón de Play/Pausa -->
+            <button id="playPauseBtn" class="play-pause-btn">Pausa</button>
         </div>
 
         <div class="video-selector">

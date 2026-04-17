@@ -6,12 +6,38 @@ const blurInput = document.getElementById('blur');
 const pixelInput = document.getElementById('pixelation'); 
 const saturateInput = document.getElementById('saturate'); 
 const resetBtn = document.getElementById('resetFilters');
+const playPauseBtn = document.getElementById('playPauseBtn');
 
+let isPlaying = true;
 
 function resetFilters() {
     blurInput.value = 0;
     pixelInput.value = 1;    
     saturateInput.value = 100;  
+}
+
+// Función para alternar play/pausa
+function togglePlayPause() {
+    if (video.paused) {
+        video.play();
+        playPauseBtn.innerHTML = 'Pausa';
+        isPlaying = true;
+    } else {
+        video.pause();
+        playPauseBtn.innerHTML = 'Play';
+        isPlaying = false;
+    }
+}
+
+// Actualizar el estado del botón cuando el video se pausa/reproduce por otros medios
+function updatePlayPauseButton() {
+    if (video.paused) {
+        playPauseBtn.innerHTML = 'Play';
+        isPlaying = false;
+    } else {
+        playPauseBtn.innerHTML = 'Pausa';
+        isPlaying = true;
+    }
 }
 
 function renderFrame() {
@@ -32,7 +58,6 @@ function renderFrame() {
         const p = parseFloat(pixelInput.value);
 
         if (p > 1) {
-          
             const sw = canvas.width / p;
             const sh = canvas.height / p;
             
@@ -44,7 +69,6 @@ function renderFrame() {
             
             ctx.imageSmoothingEnabled = true;
         } else {
-            
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         }
     }
@@ -53,16 +77,26 @@ function renderFrame() {
 }
 
 function changeVideo(newSrc, element) {
-    
     resetFilters();
 
     console.log("Cambiando video de equipo a:", newSrc);
+    
+    // Guardar el estado de reproducción antes de cambiar el video
+    const wasPlaying = !video.paused;
+    
     video.src = newSrc;
     video.load();
     
-    video.play().catch(e => console.log("Error al reproducir video: ", e));
+    // Si estaba reproduciendo, iniciar la reproducción automáticamente
+    if (wasPlaying) {
+        video.play().catch(e => console.log("Error al reproducir video: ", e));
+        playPauseBtn.innerHTML = 'Pausa';
+        isPlaying = true;
+    } else {
+        playPauseBtn.innerHTML = 'Play';
+        isPlaying = false;
+    }
 
-    
     document.querySelectorAll('.btn-equipo').forEach(t => t.classList.remove('active'));
     element.classList.add('active');
 }
@@ -73,9 +107,12 @@ video.addEventListener('loadedmetadata', () => {
     renderFrame();
 });
 
+// Eventos del video
+video.addEventListener('play', updatePlayPauseButton);
+video.addEventListener('pause', updatePlayPauseButton);
+
 resetBtn.addEventListener('click', resetFilters);
+playPauseBtn.addEventListener('click', togglePlayPause);
 
-
-window.addEventListener('click', () => {
-    if (video.paused) video.play();
-}, { once: true });
+// Iniciar el video
+video.play().catch(e => console.log("Auto-play bloqueado: ", e));
