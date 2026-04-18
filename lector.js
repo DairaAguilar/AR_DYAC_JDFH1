@@ -266,7 +266,7 @@ setCustomScannerVisible(true);
     // Mostrar mensaje
     const mensaje = document.createElement('div');
     mensaje.id = 'mensaje-actualizacion';
-    mensaje.innerText = '✅ Listo para escanear otra bandera';
+    mensaje.innerText = 'Listo para escanear otra bandera';
     mensaje.style.position = 'fixed';
     mensaje.style.bottom = '20px';
     mensaje.style.left = '50%';
@@ -797,7 +797,7 @@ setCustomScannerVisible(true);
       // Botón de actualizar
       if (!botonActualizar) {
         botonActualizar = document.createElement("button");
-        botonActualizar.innerText = "Actualizar 🔄";
+        botonActualizar.innerText = "Actualizar";
         botonActualizar.className = "confetti-btn";
         botonActualizar.style.right = "auto";
         botonActualizar.style.left = "20px";

@@ -295,11 +295,11 @@
       if (isCorrect) {
         buttons[selectedIndex].classList.add('correct');
         score++;
-        document.getElementById('feedbackModal').innerHTML = '<span style="color: #28a745;">✅ ¡Correcto!</span>';
+        document.getElementById('feedbackModal').innerHTML = '<span style="color: #28a745;">¡Correcto!</span>';
       } else {
         buttons[selectedIndex].classList.add('incorrect');
         buttons[correctIndex].classList.add('correct');
-        document.getElementById('feedbackModal').innerHTML = '<span style="color: #dc3545;">❌ Incorrecto</span>';
+        document.getElementById('feedbackModal').innerHTML = '<span style="color: #dc3545;">Incorrecto</span>';
       }
       
       // Deshabilitar botones
@@ -318,13 +318,13 @@
       let color = "";
       
       if (porcentaje >= 70) {
-        mensaje = "🎉 ¡Felicidades! Eres un experto mundialista. 🏆";
+        mensaje = "¡Felicidades! Eres un experto mundialista. ";
         color = "#28a745";
       } else if (porcentaje >= 40) {
-        mensaje = "👍 ¡Buen intento! Conoces bastante. ⚽";
+        mensaje = "¡Buen intento! Conoces bastante.";
         color = "#FFD65C";
       } else {
-        mensaje = "📚 Sigue practicando... ¡la próxima será mejor!";
+        mensaje = "Sigue practicando... ¡la próxima será mejor!";
         color = "#dc3545";
       }
       
