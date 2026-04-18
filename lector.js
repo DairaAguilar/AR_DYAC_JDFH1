@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let botonConfetti = null;
   let botonActualizar = null;
   
-  // Variable para almacenar el modelo actual (anclado en pantalla)
   let modeloPantalla = null;
   let modeloPantallaEntity = null;
   let animado = false;
@@ -43,58 +42,81 @@ document.addEventListener('DOMContentLoaded', () => {
     loader.style.display = ver ? 'block' : 'none';
   };
 
+function limpiarElementosResiduales() {
+    const nombreJugador = document.getElementById('nombre-jugador');
+    if (nombreJugador) nombreJugador.remove();
+    
+    const contenedorModelo = document.getElementById('modelo-pantalla-contenedor');
+    if (contenedorModelo) contenedorModelo.remove();
+    
+    setCustomScannerVisible(true);
+}
+
+limpiarElementosResiduales();
+
+function setCustomScannerVisible(visible) {
+    const overlay = document.getElementById('custom-scanner-overlay');
+    if (overlay) {
+        if (visible) {
+            overlay.classList.remove('hidden');
+            overlay.style.display = 'flex';
+        } else {
+            overlay.classList.add('hidden');
+            overlay.style.display = 'none';
+        }
+    }
+}
+
+setCustomScannerVisible(true);
+
  function crearModeloEnPantalla(equipo, esAnimado = false) {
   return new Promise((resolve) => {
     mostrarCargando(true);
     
-    // Crear contenedor para el modelo en pantalla - MÁS GRANDE
     const contenedorPantalla = document.createElement('div');
     contenedorPantalla.id = 'modelo-pantalla-contenedor';
     contenedorPantalla.style.position = 'fixed';
-    contenedorPantalla.style.bottom = '45%';
+    contenedorPantalla.style.bottom = '30%';
     contenedorPantalla.style.left = '50%';
     contenedorPantalla.style.transform = 'translateX(-50%)';
-    contenedorPantalla.style.width = '700px';    // ← AUMENTADO
-    contenedorPantalla.style.height = '700px';   // ← AUMENTADO
+    contenedorPantalla.style.width = '700px';  
+    contenedorPantalla.style.height = '700px';   
     contenedorPantalla.style.zIndex = '1002';
     contenedorPantalla.style.pointerEvents = 'none';
     document.body.appendChild(contenedorPantalla);
     
-    // Nombre del jugador debajo
-// Nombre del jugador ARRIBA del modelo
-const nombreJugador = document.createElement('div');
-nombreJugador.id = 'nombre-jugador';
-nombreJugador.innerText = equipo.player;
-nombreJugador.style.position = 'fixed';
-nombreJugador.style.top = '15%';     // ← Cambiado de bottom a top
-nombreJugador.style.left = '50%';
-nombreJugador.style.transform = 'translateX(-50%)';
-nombreJugador.style.color = '#FFD65C';
-nombreJugador.style.fontSize = '28px';
-nombreJugador.style.fontWeight = 'bold';
-nombreJugador.style.fontFamily = 'Arial, sans-serif';
-nombreJugador.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5)';
-nombreJugador.style.backgroundColor = 'rgba(26,26,58,0.85)';
-nombreJugador.style.padding = '8px 24px';
-nombreJugador.style.borderRadius = '40px';
-nombreJugador.style.border = '2px solid #FFD65C';
-nombreJugador.style.zIndex = '1003';
-nombreJugador.style.whiteSpace = 'nowrap';
-nombreJugador.style.textAlign = 'center';
-document.body.appendChild(nombreJugador);
+
+  const nombreJugador = document.createElement('div');
+  nombreJugador.id = 'nombre-jugador';
+  nombreJugador.innerText = equipo.player;
+  nombreJugador.style.position = 'fixed';
+  nombreJugador.style.bottom = '20%';    
+  nombreJugador.style.left = '50%';
+  nombreJugador.style.transform = 'translateX(-50%)';
+  nombreJugador.style.color = '#FFD65C';
+  nombreJugador.style.fontSize = '24px';   
+  nombreJugador.style.fontWeight = 'bold';
+  nombreJugador.style.fontFamily = 'Arial, sans-serif';
+  nombreJugador.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5)';
+  nombreJugador.style.backgroundColor = 'rgba(26,26,58,0.85)';
+  nombreJugador.style.padding = '6px 20px';  
+  nombreJugador.style.borderRadius = '40px';
+  nombreJugador.style.border = '2px solid #FFD65C';
+  nombreJugador.style.zIndex = '1003';
+  nombreJugador.style.whiteSpace = 'nowrap';
+  nombreJugador.style.textAlign = 'center';
+  document.body.appendChild(nombreJugador);
     
-    // Crear canvas - TAMAÑO CORRESPONDIENTE
     const renderer = new THREE.WebGLRenderer({ alpha: true });
-    renderer.setSize(700, 700);  // ← AUMENTADO
+    renderer.setSize(700, 700);  
     renderer.setClearColor(0x000000, 0);
     contenedorPantalla.appendChild(renderer.domElement);
     
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-    camera.position.set(0, 1.5, 3.5);  // ← CÁMARA MÁS ALEJADA
+    camera.position.set(0, 1.5, 3.5); 
     camera.lookAt(0, 1, 0);
     
-    // Iluminación
     const ambientLight = new THREE.AmbientLight(0x404040);
     scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -110,7 +132,7 @@ document.body.appendChild(nombreJugador);
     
     loader.load(modeloUrl, async (gltf) => {
       const model = gltf.scene;
-      model.scale.set(1.2, 1.2, 1.2);  // ← TU ESCALA
+      model.scale.set(1.5, 1.5, 1.5);  // ← TU ESCALA
       model.position.set(0, -0.5, 0);   // ← AJUSTADO para que no se corte abajo
       
       // Aplicar texturas
@@ -218,33 +240,30 @@ document.body.appendChild(nombreJugador);
     }
   }
   
-  function refrescarEscena() {
+ function refrescarEscena() {
     eliminarModeloPantalla();
     equipoActual = null;
     animado = false;
     
-    if (botonActual) {
-      botonActual.remove();
-      botonActual = null;
-    }
-    if (botonInfo) {
-      botonInfo.remove();
-      botonInfo = null;
-    }
-    if (panelInfo) {
-      panelInfo.remove();
-      panelInfo = null;
-    }
-    if (botonConfetti) {
-      botonConfetti.remove();
-      botonConfetti = null;
-    }
-    if (botonTrivia) {
-      botonTrivia.remove();
-      botonTrivia = null;
-    }
+    // MOSTRAR nuestro scanner personalizado nuevamente
+    setCustomScannerVisible(true);
     
-    // Mostrar mensaje de que puede escanear otra bandera
+    // Eliminar nombre del jugador
+    const nombreJugador = document.getElementById('nombre-jugador');
+    if (nombreJugador) nombreJugador.remove();
+    
+    // Eliminar contenedor del modelo
+    const contenedorModelo = document.getElementById('modelo-pantalla-contenedor');
+    if (contenedorModelo) contenedorModelo.remove();
+    
+    // Limpiar botones
+    if (botonActual) { botonActual.remove(); botonActual = null; }
+    if (botonInfo) { botonInfo.remove(); botonInfo = null; }
+    if (panelInfo) { panelInfo.remove(); panelInfo = null; }
+    if (botonConfetti) { botonConfetti.remove(); botonConfetti = null; }
+    if (botonTrivia) { botonTrivia.remove(); botonTrivia = null; }
+    
+    // Mostrar mensaje
     const mensaje = document.createElement('div');
     mensaje.id = 'mensaje-actualizacion';
     mensaje.innerText = '✅ Listo para escanear otra bandera';
@@ -258,13 +277,10 @@ document.body.appendChild(nombreJugador);
     mensaje.style.borderRadius = '10px';
     mensaje.style.fontWeight = 'bold';
     mensaje.style.zIndex = '1003';
-    mensaje.style.fontFamily = 'sans-serif';
     document.body.appendChild(mensaje);
     
-    setTimeout(() => {
-      if (mensaje) mensaje.remove();
-    }, 2000);
-  }
+    setTimeout(() => mensaje.remove(), 2000);
+}
   
   let botonTrivia = null;
 
@@ -671,6 +687,8 @@ document.body.appendChild(nombreJugador);
       // Si ya hay un modelo en pantalla, no hacer nada (evitar duplicados)
       if (modeloPantallaEntity) return;
       
+          setCustomScannerVisible(false);
+
       // Guardar equipo actual
       equipoActual = equipo;
       
