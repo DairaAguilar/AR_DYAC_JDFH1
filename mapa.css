@@ -48,17 +48,16 @@ body {
     transform: translate(-50%, -50%) scale(1.2);
 }
 
-/* ========== ESTILOS PARA COMPUTADORA (pantallas grandes) ========== */
 @media (min-width: 768px) {
     .contenedor-mapa {
-        max-width: 90%; /* Más ancho en computadora */
+        max-width: 90%; 
         margin: 30px auto;
     }
     
     .pin {
-        padding: 8px 15px;     /* Botones más grandes */
-        font-size: 14px;       /* Texto más grande */
-        border-radius: 8px;    /* Bordes más redondeados */
+        padding: 8px 15px;    
+        font-size: 14px;     
+        border-radius: 8px;
         font-weight: bold;
         transition: 0.2s;
     }
@@ -70,10 +69,9 @@ body {
     }
 }
 
-/* Para laptops grandes (pantallas muy anchas) */
 @media (min-width: 1200px) {
     .contenedor-mapa {
-        max-width: 80%; /* Aún más ancho en pantallas muy grandes */
+        max-width: 80%; 
         margin: 40px auto;
     }
     
@@ -84,13 +82,11 @@ body {
     }
 }
 
-/* Celular (por defecto) */
 .contenedor-mapa {
     width: 95%;
     max-width: 95%;
 }
 
-/* Tablets y computadoras */
 @media (min-width: 768px) {
     .contenedor-mapa {
         width: 800px;
@@ -98,7 +94,6 @@ body {
     }
 }
 
-/* Laptops grandes */
 @media (min-width: 1024px) {
     .contenedor-mapa {
         width: 1000px;
@@ -106,7 +101,6 @@ body {
     }
 }
 
-/* Pantallas muy grandes */
 @media (min-width: 1440px) {
     .contenedor-mapa {
         width: 1200px;

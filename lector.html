@@ -15,7 +15,6 @@
   <link rel="stylesheet" href="lector.css">
   
   <style>
-    /* ESTILOS PARA EL MODAL DE TRIVIA */
     .modal-trivia {
       position: fixed;
       top: 0;
@@ -80,7 +79,6 @@
       font-family: sans-serif;
     }
     
-    /* Estilos de preguntas dentro del modal */
     .quiz-card-modal {
       background: rgba(255, 255, 255, 0.1);
       padding: 20px;
@@ -175,7 +173,6 @@
     <div class="scanning-line"></div>
   </div>
 
-  <!-- OVERLAY DE ESCANEO PERSONALIZADO (controlable) -->
 <div id="custom-scanner-overlay" style="display: flex;">
     <div class="custom-scanner-corner top-left"></div>
     <div class="custom-scanner-corner top-right"></div>
@@ -184,13 +181,11 @@
     <div class="custom-scanning-line"></div>
 </div>
 
-  <!-- MODAL DE TRIVIA -->
   <div id="modalTrivia" class="modal-trivia">
     <div class="modal-content">
       <button class="modal-close" id="closeModalBtn">&times;</button>
       <h2 class="modal-title" id="modalTitle">TRIVIA</h2>
       <div class="modal-body" id="modalBody">
-        <!-- Aquí se cargará el contenido de la trivia -->
       </div>
     </div>
   </div>
@@ -216,7 +211,6 @@
   <script src="preguntas.js"></script>
   
   <script>
-    // Variables globales para la trivia modal
     let modalTrivia = document.getElementById('modalTrivia');
     let currentQuestionIndex = 0;
     let score = 0;
@@ -224,7 +218,6 @@
     let totalQuestions = 0;
     
     function abrirTriviaModal(paisId, equipoName) {
-      // Obtener preguntas del banco global (preguntas.js)
       const preguntas = bancoPreguntas[paisId];
       
       if (!preguntas || preguntas.length === 0) {
@@ -238,18 +231,15 @@
         modalTrivia.classList.add('active');
         return;
       }
-      
-      // Resetear estado
+
       currentQuestionIndex = 0;
       score = 0;
       currentPreguntas = preguntas;
       totalQuestions = preguntas.length;
-      
-      // Mostrar modal
+
       document.getElementById('modalTitle').innerHTML = `${equipoName} ⚽`;
       modalTrivia.classList.add('active');
-      
-      // Cargar primera pregunta
+
       mostrarPreguntaModal();
     }
     
@@ -301,11 +291,8 @@
         buttons[correctIndex].classList.add('correct');
         document.getElementById('feedbackModal').innerHTML = '<span style="color: #dc3545;">Incorrecto</span>';
       }
-      
-      // Deshabilitar botones
       buttons.forEach(btn => btn.disabled = true);
-      
-      // Siguiente pregunta después de 1.5 segundos
+
       setTimeout(() => {
         currentQuestionIndex++;
         mostrarPreguntaModal();
@@ -340,8 +327,7 @@
       `;
       
       document.getElementById('modalBody').innerHTML = html;
-      
-      // Si ganó, lanzar confetti
+
       if (porcentaje >= 70) {
         window.confetti({
           particleCount: 150,
@@ -355,8 +341,8 @@
       modalTrivia.classList.remove('active');
       document.getElementById('modalBody').innerHTML = '';
     }
+  
     
-    // Cerrar modal con X o click fuera
     document.getElementById('closeModalBtn').onclick = cerrarModalTrivia;
     modalTrivia.onclick = (e) => {
       if (e.target === modalTrivia) cerrarModalTrivia();

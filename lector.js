@@ -126,29 +126,26 @@ setCustomScannerVisible(true);
     backLight.position.set(0, 1, -1);
     scene.add(backLight);
     
-    // Cargar modelo GLB
+    
     const loader = new THREE.GLTFLoader();
     const modeloUrl = esAnimado ? './modelos/jugador_animado2.glb' : './modelos/jugador_base2.glb';
     
     loader.load(modeloUrl, async (gltf) => {
       const model = gltf.scene;
-      model.scale.set(1.5, 1.5, 1.5);  // ← TU ESCALA
-      model.position.set(0, -0.5, 0);   // ← AJUSTADO para que no se corte abajo
-      
-      // Aplicar texturas
+      model.scale.set(1.5, 1.5, 1.5);  
+      model.position.set(0, -0.5, 0);   
+     
       await aplicarTexturasTHREE(model, equipo.bodyTex, equipo.headTex);
       
       scene.add(model);
       
-      // Animación si es necesario
       let mixer = null;
       if (esAnimado && gltf.animations.length > 0) {
         mixer = new THREE.AnimationMixer(model);
         const action = mixer.clipAction(gltf.animations[0]);
         action.play();
       }
-      
-      // Función de animación
+   
       let lastTime = 0;
       function animate() {
         requestAnimationFrame(animate);
@@ -171,7 +168,6 @@ setCustomScannerVisible(true);
   });
 }
 
-  // Función para aplicar texturas a un modelo THREE.js
   async function aplicarTexturasTHREE(model, bodyTex, headTex) {
     const bodyTexture = await cargarTextura(bodyTex);
     const headTexture = await cargarTextura(headTex);
@@ -199,7 +195,6 @@ setCustomScannerVisible(true);
     });
   }
   
-  // Función para eliminar modelo de pantalla
   function eliminarModeloPantalla() {
     if (modeloPantallaEntity) {
       if (modeloPantallaEntity.contenedor) {
@@ -213,7 +208,6 @@ setCustomScannerVisible(true);
     modeloPantalla = null;
   }
   
-  // Función para cambiar a modo animado en el modelo de pantalla
   async function cambiarAModoAnimado() {
     if (!equipoActual) return;
     
@@ -244,26 +238,21 @@ setCustomScannerVisible(true);
     eliminarModeloPantalla();
     equipoActual = null;
     animado = false;
-    
-    // MOSTRAR nuestro scanner personalizado nuevamente
+ 
     setCustomScannerVisible(true);
-    
-    // Eliminar nombre del jugador
+
     const nombreJugador = document.getElementById('nombre-jugador');
     if (nombreJugador) nombreJugador.remove();
-    
-    // Eliminar contenedor del modelo
+ 
     const contenedorModelo = document.getElementById('modelo-pantalla-contenedor');
     if (contenedorModelo) contenedorModelo.remove();
-    
-    // Limpiar botones
+   
     if (botonActual) { botonActual.remove(); botonActual = null; }
     if (botonInfo) { botonInfo.remove(); botonInfo = null; }
     if (panelInfo) { panelInfo.remove(); panelInfo = null; }
     if (botonConfetti) { botonConfetti.remove(); botonConfetti = null; }
     if (botonTrivia) { botonTrivia.remove(); botonTrivia = null; }
-    
-    // Mostrar mensaje
+ 
     const mensaje = document.createElement('div');
     mensaje.id = 'mensaje-actualizacion';
     mensaje.innerText = 'Listo para escanear otra bandera';
@@ -684,21 +673,16 @@ setCustomScannerVisible(true);
 
     targetEntity.addEventListener("targetFound", async () => {
       
-      // Si ya hay un modelo en pantalla, no hacer nada (evitar duplicados)
       if (modeloPantallaEntity) return;
       
           setCustomScannerVisible(false);
-
-      // Guardar equipo actual
       equipoActual = equipo;
       
-      // Crear modelo anclado en pantalla (no en AR)
       const resultado = await crearModeloEnPantalla(equipo, false);
       if (resultado) {
         modeloPantallaEntity = resultado;
       }
       
-      // Crear botón de animar si no existe
       if (!botonActual) {
         botonActual = document.createElement('button');
         botonActual.className = 'animate-btn';
@@ -716,8 +700,7 @@ setCustomScannerVisible(true);
         
         document.body.appendChild(botonActual);
       }
-      
-      // Botón de información
+
       if (!botonInfo) {
         botonInfo = document.createElement('button');
         botonInfo.className = 'info-btn';
@@ -740,8 +723,7 @@ setCustomScannerVisible(true);
         
         document.body.appendChild(botonInfo);
       }
-      
-      // Botón de confetti
+
       if (!botonConfetti) {
         botonConfetti = document.createElement("button");
         botonConfetti.innerText = "Celebrar 🎉";
@@ -757,8 +739,7 @@ setCustomScannerVisible(true);
         
         document.body.appendChild(botonConfetti);
       }
-      
-      // Botón de trivia
+
       if (!botonTrivia) {
         botonTrivia = document.createElement("button");
         botonTrivia.innerText = "Jugar Trivia ⚽";
@@ -782,7 +763,6 @@ setCustomScannerVisible(true);
         const paisId = idMap[equipo.name.toUpperCase()] || equipo.name.substring(0, 3).toUpperCase();
         
         botonTrivia.onclick = () => {
-  // Usar el modal en lugar de redirigir
   if (typeof abrirTriviaModal === 'function') {
     const paisId = idMap[equipo.name.toUpperCase()] || equipo.name.substring(0, 3).toUpperCase();
     abrirTriviaModal(paisId, equipo.name);
@@ -793,8 +773,6 @@ setCustomScannerVisible(true);
         
         document.body.appendChild(botonTrivia);
       }
-      
-      // Botón de actualizar
       if (!botonActualizar) {
         botonActualizar = document.createElement("button");
         botonActualizar.innerText = "Actualizar";
@@ -814,8 +792,6 @@ setCustomScannerVisible(true);
     });
 
     targetEntity.addEventListener("targetLost", () => {
-      // NO hacemos nada cuando se pierde la bandera
-      // El modelo permanece en pantalla
       console.log("Bandera perdida, pero modelo permanece");
     });
 

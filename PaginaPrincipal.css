@@ -196,7 +196,7 @@ body {
     position: fixed;
     bottom: 0;
     right: 0;
-    width: 200px; /* Ajusta según el tamaño de tu tigre */
+    width: 200px;
     z-index: 1000;
 }
 
@@ -205,10 +205,9 @@ body {
     display: block;
 }
 
-/* Estilo de la Nube de Diálogo */
 .bubble-dialogo {
     position: absolute;
-    top: -60px; /* La pone arriba del tigre */
+    top: -60px; 
     right: 20px;
     background: white;
     color: #1A1A3A;
@@ -221,7 +220,6 @@ body {
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
-/* Triangulito de la nube */
 .bubble-dialogo::after {
     content: '';
     position: absolute;
@@ -255,7 +253,6 @@ body {
     .bubble-dialogo { width: 100px; font-size: 0.7rem; top: -50px; }
 }
 
-/* Tablets y laptops pequeñas (ancho entre 768px y 1024px) */
 @media (min-width: 768px) and (max-width: 1024px) {
     .content {
         padding: 30px;
@@ -331,7 +328,6 @@ body {
     }
 }
 
-/* Laptops grandes y pantallas de escritorio (ancho mayor a 1024px) */
 @media (min-width: 1025px) {
     .content {
         padding: 50px;
@@ -440,34 +436,29 @@ body {
         font-size: 1.3rem;
     }
 }
-/* Hacer que los botones se vuelvan amarillos al pasar el mouse */
 
-/* Para las tarjetas de navegación */
 .nav-card:hover {
-    background: var(--yellow); /* Fondo amarillo */
-    color: var(--dark-blue); /* Texto azul oscuro */
+    background: var(--yellow); 
+    color: var(--dark-blue);
     transform: translateY(-3px);
 }
 
 .nav-card:hover i {
-    color: var(--dark-blue) !important; /* Iconos también cambian a azul */
+    color: var(--dark-blue) !important;
 }
 
-/* Para el botón principal "Encontrar pareja" */
 .btn-find:hover {
-    background: var(--yellow); /* Fondo amarillo sólido */
-    color: var(--dark-blue); /* Texto azul oscuro */
+    background: var(--yellow);
+    color: var(--dark-blue);
     box-shadow: 0 10px 25px rgba(255, 214, 92, 0.5);
 }
 
-/* Para la tarjeta del juego destacado */
 .nav-card.card-juego:hover {
-    background: #FFE089; /* Amarillo más claro */
+    background: #FFE089; 
     filter: brightness(1.1);
 }
 
-/* Para el botón invisible de la nariz */
 #btn-nariz:hover {
-    background: rgba(255, 214, 92, 0.3); /* Fondo amarillo semitransparente */
+    background: rgba(255, 214, 92, 0.3); 
     border-radius: 50%;
 }

@@ -1,10 +1,9 @@
-/* --- CONFIGURACIÓN BASE --- */
+
 body { 
     margin: 0; 
     overflow: hidden; 
 }
 
-/* --- OVERLAY DEL ESCÁNER --- */
 #ui-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -62,10 +61,9 @@ body {
     pointer-events: auto;
 }
 
-/* Modificar el botón de confetti para que esté a la misma altura que Actualizar */
 .confetti-btn {
     position: fixed;
-    top: 80px;              /* Cambiado de 20px a 80px para alinear con Actualizar */
+    top: 80px;              
     right: 20px;
     padding: 12px 18px;
     background: #FFD65C;
@@ -79,10 +77,9 @@ body {
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
-/* Estilo para el nombre del jugador - AHORA ARRIBA DEL MODELO */
 #nombre-jugador {
     position: fixed;
-    top: 20% !important;    /* Cambiado de bottom a top */
+    top: 20% !important;    
     bottom: auto !important;
     left: 50%;
     transform: translateX(-50%);
@@ -182,23 +179,23 @@ body {
 
 .modal-content {
   background: linear-gradient(135deg, #1A1A3A 0%, #2a2a5a 100%);
-  width: 85%;              /* ← Reducido de 90% a 85% */
-  max-width: 400px;        /* ← Reducido de 500px a 400px */
-  max-height: 55vh;        /* ← Reducido de 60vh a 55vh */
+  width: 85%;             
+  max-width: 400px;       
+  max-height: 55vh;        
   border-radius: 20px;
   border: 3px solid #FFD65C;
-  padding: 15px;           /* ← Reducido de 20px a 15px */
+  padding: 15px;         
   position: relative;
   overflow-y: auto;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-  margin-top: 25vh;        /* ← Ajustado para que no tape el modelo */
+  margin-top: 25vh;        
 }
 
 .modal-title {
   text-align: center;
   color: #FFD65C;
-  font-size: 1.4rem;       /* ← Reducido de 1.8rem a 1.4rem */
-  margin-bottom: 15px;     /* ← Reducido */
+  font-size: 1.4rem;       
+  margin-bottom: 15px;     
   font-family: sans-serif;
 }
 
@@ -206,28 +203,28 @@ body {
   background: transparent;
   border: 1px solid white;
   color: white;
-  padding: 8px 12px;       /* ← Reducido de 12px a 8px */
+  padding: 8px 12px;      
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s;
-  font-size: 0.85rem;      /* ← Reducido de 0.95rem a 0.85rem */
+  font-size: 0.85rem;      
   text-align: left;
 }
 
 .quiz-card-modal {
   background: rgba(255, 255, 255, 0.1);
-  padding: 12px;           /* ← Reducido de 20px a 12px */
+  padding: 12px;          
   border-radius: 15px;
   border: 1px solid #FFD65C;
 }
 
 .final-score-modal {
-  font-size: 1.5rem;       /* ← Reducido de 2rem a 1.5rem */
+  font-size: 1.5rem;       
   margin: 15px 0;
   color: #FFD65C;
 }
 
-/* Asegurar que el modelo en pantalla se vea bien */
+
 #modelo-pantalla-contenedor canvas {
     display: block;
     width: 100%;

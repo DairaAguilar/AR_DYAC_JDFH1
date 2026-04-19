@@ -16,7 +16,7 @@ function resetFilters() {
     saturateInput.value = 100;  
 }
 
-// Función para alternar play/pausa
+
 function togglePlayPause() {
     if (video.paused) {
         video.play();
@@ -29,7 +29,6 @@ function togglePlayPause() {
     }
 }
 
-// Actualizar el estado del botón cuando el video se pausa/reproduce por otros medios
 function updatePlayPauseButton() {
     if (video.paused) {
         playPauseBtn.innerHTML = 'Play';
@@ -81,13 +80,11 @@ function changeVideo(newSrc, element) {
 
     console.log("Cambiando video de equipo a:", newSrc);
     
-    // Guardar el estado de reproducción antes de cambiar el video
     const wasPlaying = !video.paused;
     
     video.src = newSrc;
     video.load();
     
-    // Si estaba reproduciendo, iniciar la reproducción automáticamente
     if (wasPlaying) {
         video.play().catch(e => console.log("Error al reproducir video: ", e));
         playPauseBtn.innerHTML = 'Pausa';
@@ -107,12 +104,10 @@ video.addEventListener('loadedmetadata', () => {
     renderFrame();
 });
 
-// Eventos del video
 video.addEventListener('play', updatePlayPauseButton);
 video.addEventListener('pause', updatePlayPauseButton);
 
 resetBtn.addEventListener('click', resetFilters);
 playPauseBtn.addEventListener('click', togglePlayPause);
 
-// Iniciar el video
 video.play().catch(e => console.log("Auto-play bloqueado: ", e));

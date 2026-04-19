@@ -3,38 +3,40 @@ const tutoriales = {
         title: 'Escáner AR',
         src: 'tutorial/MANUAL_AR.mp4',
         pasos: [
-            { txt: "Paso 1: Selecciona una bandera, solo acepta las que se muestran en esta imagen.", img: "tutorial/BANDERAS.png" },
-            { txt: "Paso 2: Escanea una imagen con la camara.", img: "tutorial/AR.png" },
-            { txt: "Paso 3: Si quieres que baile o deje de bailar, presiona el botón de ANIMAR.", img: "tutorial/AR2.png" },
-            { txt: "Paso 4: Si quieres ver confetti, da click al botón celebrar.", img: "tutorial/AR3.png" },
-            { txt: "Paso 5: Presiona el botón de INFO, para ver información del PAIS.", img: "tutorial/AR4.png" }
+            { txt: "Enfoca la camara de tu dispositivo a una distancia congruente para enfocar cualquiera de las siguientes banderas.", img: "tutorial/BANDERAS.png" },
+            { txt: "Escanea la bandera de tu elección.", img: "tutorial/AR.png" },
+            { txt: "Posteriormente, si el escaneo fue correcto, aparecerá un modelo representando a un jugador del correspondiente país que representa la bandera.", img: "tutorial/" }, //Agregar nueva imagen de modelo
+            { txt: "En caso de que desees que el personaje baile, presiona el botón de texto Animar.", img: "tutorial/AR2.png" },
+            { txt: "De caso contrario si quieres ver confetti en señal de celebración, presiona el botón de texto Celebrar.", img: "tutorial/AR3.png" },
+            { txt: "Para ver una breve descripción del país escaneado, presiona el botón de texto Info.", img: "tutorial/AR4.png" },
+            { txt: "Por ultimo, tambien es posible contestar la trivia del país escaneado presionando el botón de trivia.", img: "tutorial/" } //Falta imagen nueva de la trivia
         ]
     },
-     'video-trivias': {
+    'video-trivias': {
         title: 'Manual de Trivias',
-        src: 'tutorial/MANUAL_TRIIVIA.mp4',
+        src: 'tutorial/TRIVIA_TUTO.mp4',
         pasos: [
-            { txt: "Slecciona la trivia.", img: "tutorial/trivia.png" },
-            { txt: "Haz click en las respuestas.", img: "tutorial/trivia2.png" },
-            { txt: "Observa el resultado.", img: "tutorial/trivia3.png" },
-            { txt: "Selecciona volver, para poder contestar otra trivia.", img: "tutorial/trivia3.png" }
+            { txt: "Selecciona la trivia, presionando la bandera del respectivo país del que quieras responder.", img: "tutorial/trivia.png" },
+            { txt: "Cada trivia cuenta con diez preguntas, al responderlas poco a poco se hirá llenando una barra de progreso hasta terminar la trivia.", img: "tutorial/trivia2.png" },
+            { txt: "Al final de la trivia se mostrarán las respuestas correctas e incorrectas, asi como un mensaje de felicitación o de animos dependiendo la calificación optenida.", img: "tutorial/trivia3.png" },
         ]
     },
     'video-filtros': {
         title: 'Manual de Filtros',
         src: 'tutorial/MANUAL_FILTROS.mp4',
         pasos: [
-            { txt: "Slecciona el video.", img: "tutorial/filtro.png" },
-            { txt: "Modifica los filtro.", img: "tutorial/filtro2.png" },
-            { txt: "Disfruta de los videos.", img: "tutorial/filtro3.png" }
+            { txt: "Al entrar a la sección de filtros se verá un video predeterminado, mismo que el usuario puede cambiar seleccionando cualquier país presente en la lista de banderas, cada video mostrado será de alguna jugada o gol importante de su respectiva selección.", img: "tutorial/filtro.png" },
+            { txt: "Sobre el video hay una consola con tres filtros distintos, cada filtro tendra efecto dependiendo que tanto se llene su barra", img: "tutorial/filtro2.png" },
+            { txt: "En la esquina inferior derecha del video puede presionar el boton de texto pausa para detener la reproducción del video, y volverlo a presionar para retomarlo.", img: "tutorial/FiltroPausa.png" }
         ]
     },
     'video-partidos': {
         title: 'Manual de Partidos',
         src: 'tutorial/MANUAL_MAPA.mp4',
         pasos: [
-            { txt: "Selecciona un sede.", img: "tutorial/mapa.png" },
-            { txt: "Observa los partidos que se llevaran a cabo en los diferentes estadios.", img: "tutorial/mapa2.png" }
+            { txt: "El usuario puede observar un mapa con todas las sedes resalatadas del proximo mundial, para ver mejor los detalles se debe presionar la sede de su elección.", img: "tutorial/mapa.png" },
+            { txt: "Dentro del apartado de cada país hay un listado de horarios con los proximos partidos que se llevaran a cabo en la respectiva sede.", img: "tutorial/Mapa2.png" },
+            { txt: "Al final de cada página hay una fotografia del estadio sede.", img: "tutorial/Estadio.png" }
         ]
     }
 };
@@ -44,7 +46,7 @@ function openModal(tipo) {
     const video = document.getElementById('tutorialVideo');
     const title = document.getElementById('modalTitle');
     const container = document.getElementById('instruccionesEscritas');
-    
+
     const data = tutoriales[tipo];
     title.innerText = data.title;
     video.src = data.src;

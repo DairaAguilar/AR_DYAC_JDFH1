@@ -23,7 +23,7 @@ body {
     align-items: center;
 }
 
-/* Video */
+
 .video-wrapper, .video-container {
     margin: 10px 0;
     border: 3px solid var(--yellow);
@@ -42,7 +42,7 @@ canvas {
     display: block;
 }
 
-/* Botón Play/Pausa */
+
 .play-pause-btn {
     position: absolute;
     bottom: 15px;
@@ -67,7 +67,7 @@ canvas {
     transform: scale(1.05);
 }
 
-/* Controles de Filtros */
+
 .controls {
     background: rgba(255, 255, 255, 0.1);
     padding: 15px;
@@ -157,7 +157,7 @@ input[type="range"] {
     text-overflow: ellipsis;
 }
 
-/* Estados del Botón */
+
 .btn-equipo:hover {
     border-color: var(--yellow);
 }
@@ -172,7 +172,6 @@ input[type="range"] {
     font-weight: bold;
 }
 
-/* Scrollbar personalizado */
 .botones-equipos::-webkit-scrollbar {
     width: 6px;
 }
@@ -181,7 +180,6 @@ input[type="range"] {
     border-radius: 10px;
 }
 
-/* Botón Volver */
 .btn-volver {
     display: inline-block;
     margin: 10px;
