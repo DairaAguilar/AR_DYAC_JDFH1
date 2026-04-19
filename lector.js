@@ -726,7 +726,7 @@ setCustomScannerVisible(true);
 
       if (!botonConfetti) {
         botonConfetti = document.createElement("button");
-        botonConfetti.innerText = "Celebrar 🎉";
+        botonConfetti.innerText = "Celebrar";
         botonConfetti.className = "confetti-btn";
         
         botonConfetti.onclick = () => {
@@ -742,7 +742,7 @@ setCustomScannerVisible(true);
 
       if (!botonTrivia) {
         botonTrivia = document.createElement("button");
-        botonTrivia.innerText = "Jugar Trivia ⚽";
+        botonTrivia.innerText = "Jugar Trivia";
         botonTrivia.className = "trivia-btn-ar";
         
         const idMap = { 
