@@ -5,11 +5,12 @@ const tutoriales = {
         pasos: [
             { txt: "Enfoca la camara de tu dispositivo a una distancia congruente para enfocar cualquiera de las siguientes banderas.", img: "tutorial/BANDERAS.png" },
             { txt: "Escanea la bandera de tu elección.", img: "tutorial/AR.png" },
-            { txt: "Posteriormente, si el escaneo fue correcto, aparecerá un modelo representando a un jugador del correspondiente país que representa la bandera.", img: "tutorial/" }, //Agregar nueva imagen de modelo
+            { txt: "Posteriormente, si el escaneo fue correcto, aparecerá un modelo representando a un jugador del correspondiente país que representa la bandera.", img: "tutorial/AR7.png" }, //Agregar nueva imagen de modelo
             { txt: "En caso de que desees que el personaje baile, presiona el botón de texto Animar.", img: "tutorial/AR2.png" },
             { txt: "De caso contrario si quieres ver confetti en señal de celebración, presiona el botón de texto Celebrar.", img: "tutorial/AR3.png" },
             { txt: "Para ver una breve descripción del país escaneado, presiona el botón de texto Info.", img: "tutorial/AR4.png" },
-            { txt: "Por ultimo, tambien es posible contestar la trivia del país escaneado presionando el botón de trivia.", img: "tutorial/" } //Falta imagen nueva de la trivia
+            { txt: "Por ultimo, tambien es posible contestar la trivia del país escaneado presionando el botón de trivia.", img: "tutorial/AR5.png" },
+            { txt: "Si deseas escanear otra imagen, presiona el botón de Actualizar.", img: "tutorial/AR6.png" } 
         ]
     },
     'video-trivias': {
@@ -51,7 +52,6 @@ function openModal(tipo) {
     title.innerText = data.title;
     video.src = data.src;
 
-    // Generar las tarjetas de pasos
     container.innerHTML = data.pasos.map(p => `
         <div class="paso-item">
             <img src="${p.img}" onerror="this.src='https://via.placeholder.com/600x400/252550/FFD65C?text=Paso+Imagen'">
@@ -60,7 +60,7 @@ function openModal(tipo) {
     `).join('');
 
     modal.style.display = 'block';
-    document.body.style.overflow = 'hidden'; // Evita que el fondo se mueva
+    document.body.style.overflow = 'hidden'; 
     video.play();
 }
 
