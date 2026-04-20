@@ -10,6 +10,8 @@ const tutoriales = {
             { txt: "De caso contrario si quieres ver confetti en señal de celebración, presiona el botón de texto Celebrar.", img: "tutorial/AR3.png" },
             { txt: "Para ver una breve descripción del país escaneado, presiona el botón de texto Info.", img: "tutorial/AR4.png" },
             { txt: "Por ultimo, tambien es posible contestar la trivia del país escaneado presionando el botón de trivia.", img: "tutorial/AR5.png" },
+            { txt: "Para poder ver una simulación en tiempo real del equipo escaneado, presiona el botón Simulación.", img: "tutorial/AR8.png" },
+             { txt: "La simulación dura un minuto, mismo en que podrás visualizar eventos en tiempo real del partido.", img: "tutorial/AR9.png" },
             { txt: "Si deseas escanear otra imagen, presiona el botón de Actualizar.", img: "tutorial/AR6.png" } 
         ]
     },

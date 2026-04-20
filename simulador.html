@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHAMPS - Simulación de Partido</title>
+    <link rel="stylesheet" href="menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --yellow: #FFD65C;
+            --dark-blue: #1A1A3A;
+            --light-blue: #252550;
+            --white: #FFFFFF;
+            --green: #2ecc71;
+            --red: #e74c3c;
+            --orange: #f39c12;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--dark-blue);
+            color: var(--white);
+            min-height: 100vh;
+        }
+
+        .simulacion-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .scoreboard {
+            background: linear-gradient(135deg, var(--light-blue) 0%, #1a1a3a 100%);
+            border-radius: 30px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid var(--yellow);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .team {
+            flex: 1;
+            text-align: center;
+        }
+
+        .team-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .team-score {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--yellow);
+            line-height: 1;
+        }
+
+        .vs {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--yellow);
+            background: rgba(255,214,92,0.2);
+            padding: 10px 20px;
+            border-radius: 50px;
+        }
+
+        .match-info {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .match-clock {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .minuto {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: var(--dark-blue);
+            display: inline-block;
+            padding: 10px 40px;
+            border-radius: 50px;
+            border: 2px solid var(--yellow);
+            font-family: monospace;
+        }
+
+        .events-section {
+            background: var(--light-blue);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .events-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--yellow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .events-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .event-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .event-minute {
+            background: var(--dark-blue);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .event-description {
+            flex: 1;
+        }
+
+        .event-goal {
+            color: var(--green);
+            font-weight: bold;
+        }
+
+        .event-own-goal {
+            color: var(--orange);
+            font-weight: bold;
+        }
+
+        .event-penalty {
+            color: var(--yellow);
+            font-weight: bold;
+        }
+
+        .event-card {
+            color: var(--yellow);
+        }
+
+        .event-red {
+            color: var(--red);
+            font-weight: bold;
+        }
+
+        .match-status {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--yellow);
+        }
+
+        .mobile-menu {
+            top: 60px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo-section">
+            <div class="logo-icon">
+                <img src="img/CHAMPS.png" alt="Logo Champs" class="brand-logo-img">
+            </div>
+            <h1 class="brand-name">CHAMPS</h1>
+        </div>
+        <div class="menu-icon" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <nav class="mobile-menu" id="mobileMenu">
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="lector.html">Escaner AR</a></li>
+            <li><a href="mapa.html">Partidos</a></li>
+            <li><a href="filtros.html">Filtros</a></li>
+            <li><a href="trivias_menu.html">Trivias</a></li>
+            <li><a href="jueguito.html">Minijuego</a></li>
+            <li><a href="simulacion.html">Simulacion</a></li>
+        </ul>
+    </nav>
+
+    <button onclick="window.history.back()" class="btn-volver">VOLVER</button>
+
+    <div class="simulacion-container">
+        
+        <div class="scoreboard">
+            <div class="teams">
+                <div class="team">
+                    <div class="team-name" id="teamLocal">MEXICO</div>
+                    <div class="team-score" id="scoreLocal">0</div>
+                </div>
+                <div class="vs">VS</div>
+                <div class="team">
+                    <div class="team-name" id="teamVisitante">ARGENTINA</div>
+                    <div class="team-score" id="scoreVisitante">0</div>
+                </div>
+            </div>
+            <div class="match-info">
+                <i class="fas fa-trophy"></i> Final del Mundial 2026
+            </div>
+        </div>
+
+        <div class="match-clock">
+            <div class="minuto" id="minuto">0</div>
+        </div>
+
+        <div class="events-section">
+            <div class="events-title">
+                <i class="fas fa-futbol"></i>
+                EVENTOS DEL PARTIDO
+            </div>
+            <div class="events-list" id="eventsList">
+                <div class="event-item">
+                    <div class="event-minute">0</div>
+                    <div class="event-description">COMIENZA EL PARTIDO</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="match-status" id="matchStatus">
+            Partido en curso...
+        </div>
+    </div>
+
+    <script src="menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        // ============================================
+        // SIMULADOR DE PARTIDO - VERSION AUTOMATICA
+        // ============================================
+        
+        let minuto = 0;
+        let scoreLocal = 0;
+        let scoreVisitante = 0;
+        let intervalId = null;
+        let partidoActivo = true;
+        
+        const equipoLocal = "MEXICO";
+        const equipoVisitante = "ARGENTINA";
+        
+        // Probabilidades de eventos (porcentaje por minuto)
+        // Un gol es mas probable que un autogol
+        const PROBABILIDADES = {
+            GOL: 7,           // 7% de probabilidad por minuto
+            AUTOGOL: 1,       // 1% de probabilidad
+            PENALTI_GOL: 2,   // 2% (y dentro de este, 70% de que sea gol)
+            PENALTI_FALLADO: 1, // 1% (30% de que sea fallado)
+            TARJETA_AMARILLA: 5,
+            TARJETA_ROJA: 1,
+            TIRO: 12
+        };
+        
+        // Elementos DOM
+        const teamLocalEl = document.getElementById('teamLocal');
+        const teamVisitanteEl = document.getElementById('teamVisitante');
+        const scoreLocalEl = document.getElementById('scoreLocal');
+        const scoreVisitanteEl = document.getElementById('scoreVisitante');
+        const minutoEl = document.getElementById('minuto');
+        const eventsList = document.getElementById('eventsList');
+        const matchStatus = document.getElementById('matchStatus');
+        
+        teamLocalEl.textContent = equipoLocal;
+        teamVisitanteEl.textContent = equipoVisitante;
+        
+        function agregarEvento(min, descripcion, tipo = 'normal') {
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'event-item';
+            
+            let claseExtra = '';
+            if (tipo === 'goal') claseExtra = 'event-goal';
+            if (tipo === 'own-goal') claseExtra = 'event-own-goal';
+            if (tipo === 'penalty') claseExtra = 'event-penalty';
+            if (tipo === 'card') claseExtra = 'event-card';
+            if (tipo === 'red') claseExtra = 'event-red';
+            
+            eventDiv.innerHTML = `
+                <div class="event-minute">${min}</div>
+                <div class="event-description ${claseExtra}">${descripcion}</div>
+            `;
+            
+            eventsList.insertBefore(eventDiv, eventsList.firstChild);
+            
+            while (eventsList.children.length > 50) {
+                eventsList.removeChild(eventsList.lastChild);
+            }
+        }
+        
+        function actualizarMarcador() {
+            scoreLocalEl.textContent = scoreLocal;
+            scoreVisitanteEl.textContent = scoreVisitante;
+        }
+        
+        function actualizarReloj() {
+            minutoEl.textContent = minuto;
+        }
+        
+        function marcarGol(equipo, tipo = 'normal') {
+            if (tipo === 'own-goal') {
+                if (equipo === 'local') {
+                    scoreVisitante++;
+                    agregarEvento(minuto, `AUTOGOL de ${equipoLocal} - ${equipoLocal} ${scoreLocal} ${scoreVisitante}`, 'own-goal');
+                } else {
+                    scoreLocal++;
+                    agregarEvento(minuto, `AUTOGOL de ${equipoVisitante} - ${equipoLocal} ${scoreLocal} ${scoreVisitante}`, 'own-goal');
+                }
+            } else if (tipo === 'penalty') {
+                if (equipo === 'local') {
+                    scoreLocal++;
+                    agregarEvento(minuto, `PENALTI convertido por ${equipoLocal} - ${scoreLocal} ${scoreVisitante}`, 'penalty');
+                } else {
+                    scoreVisitante++;
+                    agregarEvento(minuto, `PENALTI convertido por ${equipoVisitante} - ${scoreLocal} ${scoreVisitante}`, 'penalty');
+                }
+            } else {
+                if (equipo === 'local') {
+                    scoreLocal++;
+                    agregarEvento(minuto, `GOL de ${equipoLocal} - ${scoreLocal} ${scoreVisitante}`, 'goal');
+                } else {
+                    scoreVisitante++;
+                    agregarEvento(minuto, `GOL de ${equipoVisitante} - ${scoreLocal} ${scoreVisitante}`, 'goal');
+                }
+            }
+            
+            actualizarMarcador();
+            
+            const xPos = equipo === 'local' ? 0.3 : 0.7;
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6, x: xPos } });
+        }
+        
+        function determinarEquipo() {
+            return Math.random() > 0.5 ? 'local' : 'visitante';
+        }
+        
+        function simularEvento() {
+            const random = Math.random() * 100;
+            const equipo = determinarEquipo();
+            const equipoNombre = equipo === 'local' ? equipoLocal : equipoVisitante;
+            let acumulado = 0;
+            
+            // GOL
+            acumulado += PROBABILIDADES.GOL;
+            if (random <= acumulado) {
+                marcarGol(equipo, 'normal');
+                return;
+            }
+            
+            // AUTOGOL
+            acumulado += PROBABILIDADES.AUTOGOL;
+            if (random <= acumulado) {
+                marcarGol(equipo, 'own-goal');
+                return;
+            }
+            
+            // PENALTI (70% gol, 30% fallado)
+            acumulado += PROBABILIDADES.PENALTI_GOL + PROBABILIDADES.PENALTI_FALLADO;
+            if (random <= acumulado) {
+                const esGol = Math.random() < 0.7;
+                if (esGol) {
+                    marcarGol(equipo, 'penalty');
+                } else {
+                    agregarEvento(minuto, `PENALTI fallado por ${equipoNombre}`, 'penalty');
+                }
+                return;
+            }
+            
+            // TARJETA AMARILLA
+            acumulado += PROBABILIDADES.TARJETA_AMARILLA;
+            if (random <= acumulado) {
+                agregarEvento(minuto, `Tarjeta AMARILLA para ${equipoNombre}`, 'card');
+                return;
+            }
+            
+            // TARJETA ROJA
+            acumulado += PROBABILIDADES.TARJETA_ROJA;
+            if (random <= acumulado) {
+                agregarEvento(minuto, `Tarjeta ROJA para ${equipoNombre}`, 'red');
+                return;
+            }
+            
+            // TIRO (solo si no hubo otro evento)
+            if (random <= acumulado + PROBABILIDADES.TIRO) {
+                agregarEvento(minuto, `${equipoNombre} - Tiro al arco`, 'normal');
+                return;
+            }
+        }
+        
+        function avanzarMinuto() {
+            if (!partidoActivo) return;
+            
+            // Fin del partido a los 90 minutos
+            if (minuto >= 90) {
+                finalizarPartido();
+                return;
+            }
+            
+            minuto++;
+            actualizarReloj();
+            
+            // Probabilidad de evento por minuto (aumenta en los ultimos minutos)
+            let probEvento = 0.35;
+            if (minuto > 75) probEvento = 0.45;
+            if (minuto > 85) probEvento = 0.55;
+            
+            if (Math.random() < probEvento) {
+                simularEvento();
+            }
+        }
+        
+        function finalizarPartido() {
+            partidoActivo = false;
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+            
+            let resultado = '';
+            
+            if (scoreLocal > scoreVisitante) {
+                resultado = `FIN DEL PARTIDO - ${equipoLocal} CAMPEON`;
+                confetti({ particleCount: 300, spread: 120, origin: { y: 0.5 } });
+            } else if (scoreVisitante > scoreLocal) {
+                resultado = `FIN DEL PARTIDO - ${equipoVisitante} CAMPEON`;
+                confetti({ particleCount: 300, spread: 120, origin: { y: 0.5 } });
+            } else {
+                resultado = `FIN DEL PARTIDO - EMPATE`;
+            }
+            
+            agregarEvento(minuto, resultado, 'normal');
+            matchStatus.textContent = resultado;
+        }
+        
+        function iniciarSimulacion() {
+            partidoActivo = true;
+            intervalId = setInterval(avanzarMinuto, 1000);
+        }
+        
+        iniciarSimulacion();
+    </script>
+</body>
+</html>

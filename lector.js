@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+
   const sceneEl = document.querySelector('#ar-scene');
   const textureLoader = new THREE.TextureLoader();
   const loadingOverlay = document.getElementById('loading-overlay');
@@ -10,6 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
   let botonConfetti = null;
   let botonActualizar = null;
 
+  let botonSimulacion = null;
+
+  // Contador de veces que se presiona "Actualizar" (se resetea solo al recargar la página)
+  let contadorActualizaciones = 0;
+
   let isChanging = false;
   
   let modeloPantalla = null;
@@ -17,6 +23,110 @@ document.addEventListener('DOMContentLoaded', () => {
   let animado = false;
   let equipoActual = null;
   let contenidoHolderGlobal = null;
+
+
+  //NUEVOABAJO
+  // ========== CONTADOR DE DETECCIONES PARA REFRESCO AUTOMÁTICO ==========
+const MAX_DETECCIONES = 15;  // Cambia a 16 para producción
+let refrescoProgramado = false;
+
+function mostrarMensajeRefresco() {
+    const mensaje = document.createElement('div');
+    mensaje.id = 'mensaje-refresco';
+    mensaje.innerText = `🔄 Se alcanzaron ${MAX_DETECCIONES} escaneos. Refrescando para mejor rendimiento...`;
+    mensaje.style.position = 'fixed';
+    mensaje.style.bottom = '30%';
+    mensaje.style.left = '50%';
+    mensaje.style.transform = 'translateX(-50%)';
+    mensaje.style.backgroundColor = '#FFD65C';
+    mensaje.style.color = '#1A1A3A';
+    mensaje.style.padding = '15px 25px';
+    mensaje.style.borderRadius = '15px';
+    mensaje.style.fontWeight = 'bold';
+    mensaje.style.zIndex = '10000';
+    mensaje.style.textAlign = 'center';
+    mensaje.style.fontSize = '1.2rem';
+    mensaje.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+    document.body.appendChild(mensaje);
+    
+    setTimeout(() => {
+        if (mensaje) mensaje.remove();
+    }, 2000);
+}
+
+
+function obtenerContador() {
+    let contador = sessionStorage.getItem('contadorDetecciones');
+    if (contador === null) {
+        contador = 0;
+        sessionStorage.setItem('contadorDetecciones', contador);
+    }
+    return parseInt(contador);
+}
+
+function guardarContador(valor) {
+    sessionStorage.setItem('contadorDetecciones', valor);
+}
+
+function incrementarContadorDetecciones() {
+    let contador = obtenerContador();
+    contador++;
+    guardarContador(contador);
+    console.log(`Escaneos realizados: ${contador} / ${MAX_DETECCIONES}`);
+    
+    if (contador >= MAX_DETECCIONES && !refrescoProgramado) {
+        refrescarPagina();
+    }
+}
+
+function resetearContador() {
+    guardarContador(0);
+    refrescoProgramado = false;
+    console.log("Contador reiniciado a 0");
+}
+
+function mostrarMensajeRefresco() {
+    const mensaje = document.createElement('div');
+    mensaje.id = 'mensaje-refresco';
+    mensaje.innerText = `🔄 Se alcanzaron ${MAX_DETECCIONES} escaneos. Refrescando...`;
+    mensaje.style.position = 'fixed';
+    mensaje.style.bottom = '30%';
+    mensaje.style.left = '50%';
+    mensaje.style.transform = 'translateX(-50%)';
+    mensaje.style.backgroundColor = '#FFD65C';
+    mensaje.style.color = '#1A1A3A';
+    mensaje.style.padding = '15px 25px';
+    mensaje.style.borderRadius = '15px';
+    mensaje.style.fontWeight = 'bold';
+    mensaje.style.zIndex = '10000';
+    mensaje.style.textAlign = 'center';
+    mensaje.style.fontSize = '1.2rem';
+    document.body.appendChild(mensaje);
+    
+    setTimeout(() => {
+        if (mensaje) mensaje.remove();
+    }, 2000);
+}
+
+function refrescarPagina() {
+    if (refrescoProgramado) return;
+    refrescoProgramado = true;
+    
+    mostrarMensajeRefresco();
+    
+    setTimeout(() => {
+        sessionStorage.setItem('recargando', 'true');
+        location.reload();
+    }, 2500);
+}
+
+// SOLO AL INICIO: si NO venimos de un refresco, reseteamos el contador
+if (!sessionStorage.getItem('recargando')) {
+    resetearContador();
+} else {
+    // Si venimos de un refresco, limpiamos la marca
+    sessionStorage.removeItem('recargando');
+}
 
   sceneEl.addEventListener("arReady", (event) => {
     console.log("MindAR está listo");
@@ -43,6 +153,286 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     loader.style.display = ver ? 'block' : 'none';
   };
+
+// ========== SIMULACION DE PARTIDO ==========
+let simulacionInterval = null;
+let simulacionMinuto = 0;
+let simulacionScoreLocal = 0;
+let simulacionScoreVisitante = 0;
+let simulacionActiva = false;
+
+const PROBABILIDADES_SIM = {
+    GOL: 7,
+    AUTOGOL: 1,
+    PENALTI_GOL: 2,
+    PENALTI_FALLADO: 1,
+    TARJETA_AMARILLA: 5,
+    TARJETA_ROJA: 1,
+    TIRO: 12
+};
+
+function agregarEventoSimulacion(min, descripcion, tipo) {
+    const eventsList = document.getElementById('simulacionEvents');
+    if (!eventsList) return;
+    
+    const eventDiv = document.createElement('div');
+    eventDiv.className = 'event-item';
+    
+    let claseExtra = '';
+    if (tipo === 'goal') claseExtra = 'event-goal';
+    if (tipo === 'own-goal') claseExtra = 'event-own-goal';
+    if (tipo === 'penalty') claseExtra = 'event-penalty';
+    if (tipo === 'card') claseExtra = 'event-card';
+    if (tipo === 'red') claseExtra = 'event-red';
+    
+    eventDiv.innerHTML = `
+        <div class="event-minute">${min}</div>
+        <div class="event-description ${claseExtra}">${descripcion}</div>
+    `;
+    
+    eventsList.insertBefore(eventDiv, eventsList.firstChild);
+    
+    while (eventsList.children.length > 30) {
+        eventsList.removeChild(eventsList.lastChild);
+    }
+}
+
+function actualizarMarcadorSimulacion() {
+    const localScore = document.getElementById('simulacionScoreLocal');
+    const visitanteScore = document.getElementById('simulacionScoreVisitante');
+    if (localScore) localScore.textContent = simulacionScoreLocal;
+    if (visitanteScore) visitanteScore.textContent = simulacionScoreVisitante;
+}
+
+function actualizarRelojSimulacion() {
+    const minutoEl = document.getElementById('simulacionMinuto');
+    if (minutoEl) minutoEl.textContent = simulacionMinuto;
+}
+
+function marcarGolSimulacion(equipo, tipo) {
+    const equipoLocal = document.getElementById('simulacionTeamLocal')?.textContent || "LOCAL";
+    const equipoVisitante = document.getElementById('simulacionTeamVisitante')?.textContent || "VISITANTE";
+    
+    if (tipo === 'own-goal') {
+        if (equipo === 'local') {
+            simulacionScoreVisitante++;
+            agregarEventoSimulacion(simulacionMinuto, `AUTOGOL de ${equipoLocal} - ${simulacionScoreLocal} ${simulacionScoreVisitante}`, 'own-goal');
+        } else {
+            simulacionScoreLocal++;
+            agregarEventoSimulacion(simulacionMinuto, `AUTOGOL de ${equipoVisitante} - ${simulacionScoreLocal} ${simulacionScoreVisitante}`, 'own-goal');
+        }
+    } else if (tipo === 'penalty') {
+        if (equipo === 'local') {
+            simulacionScoreLocal++;
+            agregarEventoSimulacion(simulacionMinuto, `PENALTI convertido por ${equipoLocal} - ${simulacionScoreLocal} ${simulacionScoreVisitante}`, 'penalty');
+        } else {
+            simulacionScoreVisitante++;
+            agregarEventoSimulacion(simulacionMinuto, `PENALTI convertido por ${equipoVisitante} - ${simulacionScoreLocal} ${simulacionScoreVisitante}`, 'penalty');
+        }
+    } else {
+        if (equipo === 'local') {
+            simulacionScoreLocal++;
+            agregarEventoSimulacion(simulacionMinuto, `GOL de ${equipoLocal} - ${simulacionScoreLocal} ${simulacionScoreVisitante}`, 'goal');
+        } else {
+            simulacionScoreVisitante++;
+            agregarEventoSimulacion(simulacionMinuto, `GOL de ${equipoVisitante} - ${simulacionScoreLocal} ${simulacionScoreVisitante}`, 'goal');
+        }
+    }
+    
+    actualizarMarcadorSimulacion();
+    
+    const xPos = equipo === 'local' ? 0.3 : 0.7;
+    window.confetti({ particleCount: 80, spread: 60, origin: { y: 0.6, x: xPos } });
+}
+
+function determinarEquipoSimulacion() {
+    return Math.random() > 0.5 ? 'local' : 'visitante';
+}
+
+function simularEventoSimulacion() {
+    const random = Math.random() * 100;
+    const equipo = determinarEquipoSimulacion();
+    const equipoLocal = document.getElementById('simulacionTeamLocal')?.textContent || "LOCAL";
+    const equipoVisitante = document.getElementById('simulacionTeamVisitante')?.textContent || "VISITANTE";
+    const equipoNombre = equipo === 'local' ? equipoLocal : equipoVisitante;
+    let acumulado = 0;
+    
+    acumulado += PROBABILIDADES_SIM.GOL;
+    if (random <= acumulado) {
+        marcarGolSimulacion(equipo, 'normal');
+        return;
+    }
+    
+    acumulado += PROBABILIDADES_SIM.AUTOGOL;
+    if (random <= acumulado) {
+        marcarGolSimulacion(equipo, 'own-goal');
+        return;
+    }
+    
+    acumulado += PROBABILIDADES_SIM.PENALTI_GOL + PROBABILIDADES_SIM.PENALTI_FALLADO;
+    if (random <= acumulado) {
+        const esGol = Math.random() < 0.7;
+        if (esGol) {
+            marcarGolSimulacion(equipo, 'penalty');
+        } else {
+            agregarEventoSimulacion(simulacionMinuto, `PENALTI fallado por ${equipoNombre}`, 'penalty');
+        }
+        return;
+    }
+    
+    acumulado += PROBABILIDADES_SIM.TARJETA_AMARILLA;
+    if (random <= acumulado) {
+        agregarEventoSimulacion(simulacionMinuto, `Tarjeta AMARILLA para ${equipoNombre}`, 'card');
+        return;
+    }
+    
+    acumulado += PROBABILIDADES_SIM.TARJETA_ROJA;
+    if (random <= acumulado) {
+        agregarEventoSimulacion(simulacionMinuto, `Tarjeta ROJA para ${equipoNombre}`, 'red');
+        return;
+    }
+    
+    if (random <= acumulado + PROBABILIDADES_SIM.TIRO) {
+        agregarEventoSimulacion(simulacionMinuto, `${equipoNombre} - Tiro al arco`, 'normal');
+        return;
+    }
+}
+
+function avanzarMinutoSimulacion() {
+    if (!simulacionActiva) return;
+    
+    if (simulacionMinuto >= 90) {
+        finalizarSimulacion();
+        return;
+    }
+    
+    simulacionMinuto++;
+    actualizarRelojSimulacion();
+    
+    let probEvento = 0.35;
+    if (simulacionMinuto > 75) probEvento = 0.45;
+    if (simulacionMinuto > 85) probEvento = 0.55;
+    
+    if (Math.random() < probEvento) {
+        simularEventoSimulacion();
+    }
+}
+
+function finalizarSimulacion() {
+    simulacionActiva = false;
+    if (simulacionInterval) {
+        clearInterval(simulacionInterval);
+        simulacionInterval = null;
+    }
+    
+    const equipoLocal = document.getElementById('simulacionTeamLocal')?.textContent || "LOCAL";
+    const equipoVisitante = document.getElementById('simulacionTeamVisitante')?.textContent || "VISITANTE";
+    const matchStatus = document.getElementById('simulacionMatchStatus');
+    
+    if (matchStatus) {
+        if (simulacionScoreLocal > simulacionScoreVisitante) {
+            matchStatus.textContent = `FIN DEL PARTIDO - ${equipoLocal} CAMPEON`;
+            window.confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
+        } else if (simulacionScoreVisitante > simulacionScoreLocal) {
+            matchStatus.textContent = `FIN DEL PARTIDO - ${equipoVisitante} CAMPEON`;
+            window.confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
+        } else {
+            matchStatus.textContent = `FIN DEL PARTIDO - EMPATE`;
+        }
+    }
+}
+
+function iniciarSimulacionEnModal(objLocal, objVisitante) {
+    if (simulacionInterval) clearInterval(simulacionInterval);
+    
+    simulacionMinuto = 0;
+    simulacionScoreLocal = 0;
+    simulacionScoreVisitante = 0;
+    simulacionActiva = true;
+
+    // Lógica para determinar el nombre del archivo
+    const getPath = (obj) => {
+        if (!obj) return "";
+        // Si hay 'flag' lo usa, si no, usa el nombre del país sin espacios
+        const fileName = obj.flag ? obj.flag : obj.name.replace(/\s+/g, '');
+        return `./BANDERAS1/${fileName}`;
+    };
+
+    const pathLocal = getPath(objLocal);
+    const pathVisitante = getPath(objVisitante);
+
+    // Generador de HTML con fallback PNG -> JPG
+    const getImgHTML = (path, alt) => `
+        <img src="${path}.png" class="team-flag-local" alt="${alt}"
+             onerror="if (this.src.endsWith('.png')) { 
+                          this.src = '${path}.jpg'; 
+                      } else if (this.src.endsWith('.jpg')) { 
+                          this.src = 'https://via.placeholder.com/64?text=?'; 
+                      }">`;
+
+    const html = `
+        <div class="scoreboard">
+            <div class="teams">
+                <div class="team">
+                    ${getImgHTML(pathLocal, objLocal.name)}
+                    <div class="team-name" id="simulacionTeamLocal">${objLocal.name}</div>
+                    <div class="team-score" id="simulacionScoreLocal">0</div>
+                </div>
+                <div class="vs">VS</div>
+                <div class="team">
+                    ${getImgHTML(pathVisitante, objVisitante.name)}
+                    <div class="team-name" id="simulacionTeamVisitante">${objVisitante.name}</div>
+                    <div class="team-score" id="simulacionScoreVisitante">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="match-clock"><div class="minuto" id="simulacionMinuto">0</div></div>
+        <div class="events-section">
+            <div class="events-title">EVENTOS DEL PARTIDO</div>
+            <div class="events-list" id="simulacionEvents"></div>
+        </div>
+        <div class="match-status" id="simulacionMatchStatus">Partido en curso...</div>
+    `;
+    
+    document.getElementById('simulacionBody').innerHTML = html;
+    simulacionInterval = setInterval(avanzarMinutoSimulacion, 1000);
+}
+
+function abrirSimulacionModal(objEquipoLocal) {
+    const equipoRivalName = determinarRivalAleatorio(objEquipoLocal.name);
+    document.getElementById('simulacionTitle').innerHTML = `${objEquipoLocal.name} vs ${equipoRivalName}`;
+    document.getElementById('modalSimulacion').classList.add('active');
+    
+    // Buscamos el objeto del rival en el array para obtener su posible propiedad 'flag'
+    const objEquipoRival = equipos.find(e => e.name === equipoRivalName);
+    
+    iniciarSimulacionEnModal(objEquipoLocal, objEquipoRival);
+}
+
+function cerrarSimulacionModal() {
+    if (simulacionInterval) {
+        clearInterval(simulacionInterval);
+        simulacionInterval = null;
+    }
+    simulacionActiva = false;
+    document.getElementById('modalSimulacion').classList.remove('active');
+}
+
+function determinarRivalAleatorio(equipoActual) {
+    const posiblesRivales = [
+        "ARGENTINA", "BRASIL", "FRANCIA", "HAITI", "INGLATERRA", 
+        "ESPAÑA", "NORUEGA", "PORTUGAL", "BELGICA", "URUGUAY",
+        "CROACIA", "MARRUECOS", "JAPON", "KOREA", "MEXICO"
+    ];
+    const filtrados = posiblesRivales.filter(r => r !== equipoActual);
+    return filtrados[Math.floor(Math.random() * filtrados.length)];
+}
+
+document.getElementById('closeSimulacionBtn').onclick = cerrarSimulacionModal;
+window.onclick = (e) => {
+    const modal = document.getElementById('modalSimulacion');
+    if (e.target === modal) cerrarSimulacionModal();
+};
 
 function limpiarElementosResiduales() {
     const nombreJugador = document.getElementById('nombre-jugador');
@@ -255,6 +645,10 @@ async function cambiarAModoBase() {
 }
   
  function refrescarEscena() {
+   contadorDetecciones = 0;  // ← AGREGAR ESTA LÍNEA
+    refrescoProgramado = false;  // ← AGREGAR ESTA LÍNEA
+      resetearContador(); 
+          sessionStorage.removeItem('recargando');  
     eliminarModeloPantalla();
     equipoActual = null;
     animado = false;
@@ -269,6 +663,7 @@ async function cambiarAModoBase() {
    
     if (botonActual) { botonActual.remove(); botonActual = null; }
     if (botonInfo) { botonInfo.remove(); botonInfo = null; }
+    if (botonSimulacion) { botonSimulacion.remove(); botonSimulacion = null; }
     if (panelInfo) { panelInfo.remove(); panelInfo = null; }
     if (botonConfetti) { botonConfetti.remove(); botonConfetti = null; }
     if (botonTrivia) { botonTrivia.remove(); botonTrivia = null; }
@@ -299,133 +694,136 @@ async function cambiarAModoBase() {
       player: "MAHREZ", 
       bodyTex: "./modelos/texturas/ARGELIA.webp", 
       headTex: "./modelos/texturas/Cara_III.webp",
-      info: "🇩🇿 ¡Campeones de África! La selección de Argelia ha ganado 2 Copas Africanas de Naciones (1990 y 2019). Su jugador más emblemático es Riyad Mahrez, y su capital es Argel."
+      info: "La selección de Argelia ha ganado 2 Copas Africanas de Naciones (1990 y 2019). Su jugador más emblemático es Riyad Mahrez, y su capital es Argel."
     },
     { 
       name: "ARABIA", 
       player: "AL-DAWSARI", 
+      flag:"ARABIASAUDITA",
       bodyTex: "./modelos/texturas/ARABIA.webp", 
       headTex: "./modelos/texturas/Cara_III.webp",
-      info: "🇸🇦 ¡Los Halcones Verdes! Arabia Saudita tiene 3 títulos de la Copa Asiática (1984, 1988 y 1996). En 2022 logró una de las mayores sorpresas al vencer 2-1 a la campeona Argentina [citation:3][citation:5]."
+      info: "Tiene 3 títulos de la Copa Asiática (1984, 1988 y 1996). En 2022 logró una de las mayores sorpresas al vencer 2-1 a la campeona Argentina."
     },
     { 
       name: "ARGENTINA", 
       player: "LIONEL MESSI", 
       bodyTex: "./modelos/texturas/ARGENTINA.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇦🇷 ¡La Albiceleste es tricampeona del mundo! Ganó los Mundiales de 1978, 1986 y 2022. Con Leo Messi a la cabeza, también tiene 16 Copas América, siendo el rey de Sudamérica [citation:2]."
+      info: "Es tricampeona del mundo! Ganó los Mundiales de 1978, 1986 y 2022. Con Leo Messi a la cabeza, también tiene 16 Copas América, siendo el rey de Sudamérica."
     },
     { 
       name: "AUSTRALIA", 
       player: "KOUL", 
       bodyTex: "./modelos/texturas/AUSTRALIA.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇦🇺 ¡Los Socceroos! Australia ha ganado la Copa de las Naciones de la OFC 4 veces y la Copa Asiática 1 vez (2015). Son el equipo que ha saltado de confederación (Oceanía a Asia) para buscar mayores retos [citation:2]."
+      info: "Ha ganado la Copa de las Naciones de la OFC 4 veces y la Copa Asiática 1 vez (2015). Son el equipo que ha saltado de confederación (Oceanía a Asia) para buscar mayores retos."
     },
     { 
       name: "AUSTRIA", 
       player: "ALMAUTOVIK", 
       bodyTex: "./modelos/texturas/AUSTRIA.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇦🇹 ¡Wunderteam! Austria logró su mejor puesto en un Mundial en 1954, alcanzando las semifinales y quedando en tercer lugar. Su capital, Viena, es una de las más musicales del mundo."
+      info: "Logró su mejor puesto en un Mundial en 1954, alcanzando las semifinales y quedando en tercer lugar. Su capital, Viena, es una de las más musicales del mundo."
     },
     { 
       name: "BELGICA", 
       player: "DE BRUYNE", 
       bodyTex: "./modelos/texturas/BELGICA.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇧🇪 ¡Los Diablos Rojos! Bélgica fue la revelación en Rusia 2018, logrando el tercer lugar. Su 'Generación Dorada' encabezada por De Bruyne y Courtois es histórica [citation:8]."
+      info: "Fue la revelación en Rusia 2018, logrando el tercer lugar. Su 'Generación Dorada' encabezada por De Bruyne y Courtois es histórica."
     },
     { 
       name: "BRASIL", 
       player: "NEYMAR JR", 
       bodyTex: "./modelos/texturas/BRASIL.webp", 
       headTex: "./modelos/texturas/Cara_IV.webp",
-      info: "🇧🇷 ¡El pentacampeón! Brasil es la selección más ganadora del mundo con 5 Copas del Mundo (1958, 1962, 1970, 1994, 2002). Son los reyes del fútbol, aunque una curiosidad es que nunca han podido vencer a Noruega [citation:1][citation:2]."
+      info: "Es la selección más ganadora del mundo con 5 Copas del Mundo (1958, 1962, 1970, 1994, 2002). Son los reyes del fútbol, aunque una curiosidad es que nunca han podido vencer a Noruega."
     },
     { 
       name: "CANADA", 
       player: "DAVIES", 
       bodyTex: "./modelos/texturas/CANADA.webp", 
       headTex: "./modelos/texturas/Cara_V.webp",
-      info: "🇨🇦 ¡La Hoja de Maple! Canadá es uno de los anfitriones del Mundial 2026. Ha ganado 2 Copas de Oro de la Concacaf (1985 y 2000). Su estrella Alphonso Davies es el más rápido del mundo."
+      info: "Es uno de los anfitriones del Mundial 2026. Ha ganado 2 Copas de Oro de la Concacaf (1985 y 2000). Su estrella Alphonso Davies es el más rápido del mundo."
     },
     { 
       name: "COLOMBIA", 
       player: "JAMES RODRIGUEZ", 
       bodyTex: "./modelos/texturas/COLOMBIA.webp", 
       headTex: "./modelos/texturas/Cara_V.webp",
-      info: "🇨🇴 ¡Los Cafeteros! Colombia logró su mejor participación en Brasil 2014 llegando a cuartos de final, donde James Rodríguez fue el goleador del torneo con 6 goles."
+      info: "Logró su mejor participación en Brasil 2014 llegando a cuartos de final, donde James Rodríguez fue el goleador del torneo con 6 goles."
     },
     { 
       name: "COSTA DE MARFIL", 
       player: "HALLER", 
+      flag:"COSTAMARFIL",
       bodyTex: "./modelos/texturas/COSTADEMARFIL.webp", 
       headTex: "./modelos/texturas/Cara_V.webp",
-      info: "🇨🇮 ¡Los Elefantes! Son los actuales campeones de África, ganando su tercera Copa Africana de Naciones en 2023. Figuras como Didier Drogba los hicieron famosos [citation:4][citation:6]."
+      info: "Son los actuales campeones de África, ganando su tercera Copa Africana de Naciones en 2023. Figuras como Didier Drogba los hicieron famosos."
     },
     { 
       name: "CROACIA", 
       player: "JAMES", 
       bodyTex: "./modelos/texturas/CROACIA.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇭🇷 ¡Vatreni! La selección más guerrera. Fue subcampeona del Mundo en 2018 y tercera en 2022. A pesar de tener solo 4 millones de habitantes, son un gigante del fútbol."
+      info: "La selección más guerrera. Fue subcampeona del Mundo en 2018 y tercera en 2022. A pesar de tener solo 4 millones de habitantes, son un gigante del fútbol."
     },
     { 
       name: "CURAZAO", 
       player: "MARTIN", 
       bodyTex: "./modelos/texturas/CURAZAO.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇨🇼 ¡La Familia Azul! Aunque no ha ido a un Mundial absoluto, tienen un dato curioso: es el país más pequeño (en población) que ha logrado hazañas en la CONCACAF [citation:1]."
+      info: "Aunque no ha ido a un Mundial absoluto, tienen un dato curioso: es el país más pequeño (en población) que ha logrado hazañas en la CONCACAF."
     },
     { 
       name: "ECUADOR", 
       player: "ENNER VALENCIA", 
       bodyTex: "./modelos/texturas/ECUADOR.webp", 
       headTex: "./modelos/texturas/Cara_IV.webp",
-      info: "🇪🇨 ¡La Tricolor! Ecuador fue el último país de Sudamérica en debutar en un Mundial (2002). Su mejor participación fue en Alemania 2006, llegando a octavos de final [citation:1]."
+      info: "Fue el último país de Sudamérica en debutar en un Mundial (2002). Su mejor participación fue en Alemania 2006, llegando a octavos de final."
     },
     { 
       name: "EGIPTO", 
       player: "SALAH", 
       bodyTex: "./modelos/texturas/EGIPTO.webp", 
       headTex: "./modelos/texturas/Cara_III.webp",
-      info: "🇪🇬 ¡Los Faraones! Egipto es el rey de África con 7 Copas Africanas de Naciones. Con Mohamed Salah como estrella, buscan dejar huella en los Mundiales [citation:2]."
+      info: "Es el rey de África con 7 Copas Africanas de Naciones. Con Mohamed Salah como estrella, buscan dejar huella en los Mundiales."
     },
     { 
       name: "ESCOCIA", 
       player: "ROBERTSON", 
       bodyTex: "./modelos/texturas/ESCOCIA.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🏴󠁧󠁢󠁳󠁣󠁴󠁿 ¡La legendaria Escocia! Son conocidos por ser la única selección que venció a Inglaterra cuando estos eran campeones del mundo (1967). Su capitán es Andy Robertson del Liverpool."
+      info: "Son conocidos por ser la única selección que venció a Inglaterra cuando estos eran campeones del mundo (1967). Su capitán es Andy Robertson del Liverpool."
     },
     { 
       name: "ESPAÑA", 
       player: "RODRII", 
       bodyTex: "./modelos/texturas/ESPAÑA.webp", 
       headTex: "./modelos/texturas/Cara_II.webp",
-      info: "🇪🇸 ¡La Furia Roja! España es campeona del mundo (2010) y tiene 4 títulos de la Eurocopa (1964, 2008, 2012, 2024). Su época de oro con el 'tiki-taka' revolucionó el fútbol [citation:2]."
+      info: "Es campeona del mundo (2010) y tiene 4 títulos de la Eurocopa (1964, 2008, 2012, 2024). Su época de oro con el 'tiki-taka' revolucionó el fútbol."
     },
     { 
       name: "EUA", 
       player: "PULISIC", 
       bodyTex: "./modelos/texturas/EUA.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇺🇸 ¡Las Barras y las Estrellas! EE.UU. es potencia en la Concacaf con 7 Copas de Oro. Anfitrión del Mundial 2026, su mejor puesto histórico fue el tercer lugar en el primer Mundial de 1930 [citation:2]."
+      info: "Es potencia en la Concacaf con 7 Copas de Oro. Anfitrión del Mundial 2026, su mejor puesto histórico fue el tercer lugar en el primer Mundial de 1930."
     },
     { 
       name: "FRANCIA", 
       player: "MBAPPÉ", 
       bodyTex: "./modelos/texturas/FRANCIA.webp", 
       headTex: "./modelos/texturas/Cara_V.webp",
-      info: "🇫🇷 ¡Les Bleus! Francia es bicampeona del mundo (1998 y 2018) y fue finalista en 2022. Tienen una de las canteras más ricas del planeta, con Kylian Mbappé como máxima estrella [citation:2]."
+      info: "Es bicampeona del mundo (1998 y 2018) y fue finalista en 2022. Tienen una de las canteras más ricas del planeta, con Kylian Mbappé como máxima estrella."
     },
      { 
       name: "GHANA", 
       player: "AYEW", 
+      flag:"GANHA",
       bodyTex: "./modelos/texturas/GHANA.webp", 
       headTex: "./modelos/texturas/Cara_V.webp",
-      info: "🇬🇭 ¡Black Stars! Ghana es la única selección africana que ha llegado a cuartos de final en un Mundial (2010). Fueron campeones africanos 4 veces [citation:1][citation:2]."
+      info: "Es la única selección africana que ha llegado a cuartos de final en un Mundial (2010). Fueron campeones africanos 4 veces."
     },
     
     { 
@@ -433,7 +831,7 @@ async function cambiarAModoBase() {
       player: "MÜLLER", 
       bodyTex: "./modelos/texturas/ALEMANIA.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇩🇪 ¡La Maquinaria Alemana! Son tetracampeones del mundo (1954, 1974, 1990, 2014). El legendario Miroslav Klose es el máximo goleador histórico de los Mundiales con 16 goles [citation:1][citation:2]."
+      info: "Son tetracampeones del mundo (1954, 1974, 1990, 2014). El legendario Miroslav Klose es el máximo goleador histórico de los Mundiales con 16 goles."
     },
    
     { 
@@ -441,198 +839,209 @@ async function cambiarAModoBase() {
       player: "NAZON", 
       bodyTex: "./modelos/texturas/HAITI.webp", 
       headTex: "./modelos/texturas/Cara_V.webp",
-      info: "🇭🇹 ¡Los Granaderos! Haití fue el primer país caribeño en clasificar a un Mundial (1974). En ese torneo, le metieron un susto a la poderosa Italia de la época."
+      info: "Fue el primer país caribeño en clasificar a un Mundial (1974). En ese torneo, le metieron un susto a la poderosa Italia de la época."
     },
     { 
       name: "INGLATERRA", 
       player: "KANE", 
       bodyTex: "./modelos/texturas/INGLATERRA.webp", 
       headTex: "./modelos/texturas/Cara_IV.webp",
-      info: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 ¡Los Tres Leones! La cuna del fútbol fue campeona del mundo en 1966 en su casa, Wembley. Con Harry Kane, buscan repetir la hazaña 60 años después."
+      info: "Fue campeona del mundo en 1966 en su casa, Wembley. Con Harry Kane, buscan repetir la hazaña 60 años después."
     },
     { 
       name: "ISLAS DEL CABOVERDE", 
       player: "RODRIGUES", 
+      flag:"ISLASDELCABOVERDE",
       bodyTex: "./modelos/texturas/CABOVERDE.webp", 
       headTex: "./modelos/texturas/Cara_V.webp",
-      info: "🇨🇻 ¡Los Tiburones Azules! Cabo Verde ha sorprendido al mundo llegando a cuartos de final de la Copa Africana. Son la revelación africana de los últimos años."
+      info: "Ha sorprendido al mundo llegando a cuartos de final de la Copa Africana. Son la revelación africana de los últimos años."
     },
     { 
       name: "JAPON", 
       player: "MINAMINO", 
       bodyTex: "./modelos/texturas/JAPAN.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇯🇵 ¡Samurái Blue! Japón es el país asiático con más títulos de la Copa Asiática (4). Son famosos por su disciplina y por derrotar a potencias como Alemania y España en 2022 [citation:1][citation:2]."
+      info: "Es el país asiático con más títulos de la Copa Asiática (4). Son famosos por su disciplina y por derrotar a potencias como Alemania y España en 2022."
     },
     { 
       name: "JORDANIA", 
       player: "AL-TAMARI", 
       bodyTex: "./modelos/texturas/JORDANIA.webp", 
       headTex: "./modelos/texturas/Cara_III.webp",
-      info: "🇯🇴 ¡Los Nashama! Jordania ha crecido enormemente, alcanzando la final de la Copa Asiática 2023. Son un equipo en constante evolución en Asia."
+      info: "Ha crecido enormemente, alcanzando la final de la Copa Asiática 2023. Son un equipo en constante evolución en Asia."
     },
     { 
       name: "KOREA", 
       player: "TAREMI", 
       bodyTex: "./modelos/texturas/KOREA.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇰🇷 ¡Tigres de Asia! Corea del Sur es la selección asiática más exitosa en Mundiales, logrando el histórico cuarto lugar en 2002. Su estrella es Son Heung-min."
+      info: "Es la selección asiática más exitosa en Mundiales, logrando el histórico cuarto lugar en 2002. Su estrella es Son Heung-min."
     },
     { 
       name: "MARRUECOS", 
       player: "HAKIMI", 
       bodyTex: "./modelos/texturas/MARRUECOS.webp", 
       headTex: "./modelos/texturas/Cara_III.webp",
-      info: "🇲🇦 ¡Los Leones del Atlas! Marruecos hizo historia al ser la primera selección africana y árabe en llegar a las semifinales de un Mundial (Catar 2022) [citation:2]."
+      info: "Hizo historia al ser la primera selección africana y árabe en llegar a las semifinales de un Mundial (Catar 2022)."
     },
     { 
       name: "MEXICO", 
       player: "SANTI GIMENEZ", 
       bodyTex: "./modelos/texturas/MEXICO.webp", 
       headTex: "./modelos/texturas/Cara_II.webp",
-      info: "🇲🇽 ¡El Tricampeón de la Concacaf! México es el gigante de Norteamérica con 14 Copas de Oro. Hará historia al ser sede de 3 Mundiales (1970, 1986 y 2026) [citation:1][citation:2]."
+      info: "Es el gigante de Norteamérica con 14 Copas de Oro. Hará historia al ser sede de 3 Mundiales (1970, 1986 y 2026)."
     },
     { 
       name: "NORUEGA", 
       player: "HAALAND", 
       bodyTex: "./modelos/texturas/NORUEGA.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇳🇴 Los Vikingos! Aunque no son los máximos ganadores, tienen un dato honorífico: son el único equipo invicto contra Brasil (nunca han perdido ante la pentacampeona) [citation:1]."
+      info: "Aunque no son los máximos ganadores, tienen un dato honorífico: son el único equipo invicto contra Brasil (nunca han perdido ante la pentacampeona)."
     },
     { 
       name: "NUEVA ZELANDA", 
       player: "WOOD", 
+      flag:"NUEVAZELANDA",
       bodyTex: "./modelos/texturas/NUEVAZELANDA.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇳🇿 ¡All Whites! Nueva Zelanda es el gigante de Oceanía, con 5 títulos de la Copa de las Naciones de la OFC. Clasificó a los Mundiales de 1982 y 2010 [citation:2]."
+      info: "Es el gigante de Oceanía, con 5 títulos de la Copa de las Naciones de la OFC. Clasificó a los Mundiales de 1982 y 2010."
     },
     { 
       name: "PAISES BAJOS", 
       player: "VAN DIJK", 
+      flag:"PAISESBAJOS",
       bodyTex: "./modelos/texturas/PAISESBAJOS.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇳🇱 ¡La Naranja Mecánica! Países Bajos tiene una de las historias más tristes del fútbol: han sido 3 veces subcampeones del mundo (1974, 1978, 2010). Su estilo 'fútbol total' es legendario [citation:2]."
+      info: "Tiene una de las historias más tristes del fútbol: han sido 3 veces subcampeones del mundo (1974, 1978, 2010). Su estilo 'fútbol total' es legendario."
     },
     { 
       name: "PANAMA", 
       player: "PEREZ", 
       bodyTex: "./modelos/texturas/PANAMA.webp", 
       headTex: "./modelos/texturas/Cara_IV.webp",
-      info: "🇵🇦 ¡Los Canaleros! Panamá hizo historia al clasificar por primera vez a un Mundial en 2018. Su gol ante Inglaterra fue un momento histórico para el país."
+      info: "Hizo historia al clasificar por primera vez a un Mundial en 2018. Su gol ante Inglaterra fue un momento histórico para el país."
     },
     { 
       name: "PARAGUAY", 
       player: "VALDEZ", 
       bodyTex: "./modelos/texturas/PARAGUAY.webp", 
       headTex: "./modelos/texturas/Cara_II.webp",
-      info: "🇵🇾 ¡La Albirroja! Paraguay fue cuartofinalista en el Mundial de 2010. Es uno de los equipos más 'picantes' de Sudamérica, con 2 Copas América en su haber [citation:2]."
+      info: "Fue cuartofinalista en el Mundial de 2010. Es uno de los equipos más 'picantes' de Sudamérica, con 2 Copas América en su haber."
     },
     { 
       name: "PORTUGAL", 
       player: "RUIPATRICIO", 
       bodyTex: "./modelos/texturas/PORTUGAL.webp", 
       headTex: "./modelos/texturas/Cara_II.webp",
-      info: "🇵🇹 ¡Las Quinas! Portugal es campeón de Europa (2016) y tiene en su haber la Nations League. Antes de Cristiano Ronaldo, solo habían ido a 3 Mundiales; con él, han ido a 6 consecutivos [citation:1][citation:2]."
+      info: "Es campeón de Europa (2016) y tiene en su haber la Nations League. Antes de Cristiano Ronaldo, solo habían ido a 3 Mundiales; con él, han ido a 6 consecutivos."
     },
     { 
       name: "QATAR", 
       player: "AL-HAYDOS", 
       bodyTex: "./modelos/texturas/QATAR.webp", 
       headTex: "./modelos/texturas/Cara_III.webp",
-      info: "🇶🇦 ¡Los Anfitriones! Catar es el actual campeón de Asia (2019 y 2023). Fue sede del memorable Mundial de 2022, donde Messi finalmente levantó la copa."
+      info: "Es el actual campeón de Asia (2019 y 2023). Fue sede del memorable Mundial de 2022, donde Messi finalmente levantó la copa."
     },
     { 
       name: "REPUBLICA DE IRAN", 
       player: "AZMOUN", 
+      flag:"RIDEIRAN",
       bodyTex: "./modelos/texturas/IRAN.webp", 
       headTex: "./modelos/texturas/Cara_III.webp",
-      info: "🇮🇷 ¡Team Melli! Irán es una potencia asiática con 3 Copas Asiáticas. Es conocida por tener una defensa férrea y por ser uno de los equipos más difíciles de vencer en Asia."
+      info: "Es una potencia asiática con 3 Copas Asiáticas. Es conocida por tener una defensa férrea y por ser uno de los equipos más difíciles de vencer en Asia."
     },
     { 
       name: "SENEGAL", 
       player: "MANE", 
       bodyTex: "./modelos/texturas/SENEGAL.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇸🇳 ¡Los Leones de la Teranga! Senegal es el campeón de África 2021. Son famosos por eliminar a Francia en el Mundial de 2002 y por su portero Édouard Mendy [citation:1][citation:2]."
+      info: "Es el campeón de África 2021. Son famosos por eliminar a Francia en el Mundial de 2002 y por su portero Édouard Mendy."
     },
     { 
       name: "SUDAFRICA", 
       player: "MOKOENA", 
       bodyTex: "./modelos/texturas/SUDAFRICA.webp", 
       headTex: "./modelos/texturas/Cara_V.webp",
-      info: "🇿🇦 ¡Bafana Bafana! Sudáfrica fue la primera nación africana en organizar un Mundial (2010). Su recuerdo más vívido es el sonido de las vuvuzelas y el gol de Tshabalala [citation:2]."
+      info: "Fue la primera nación africana en organizar un Mundial (2010). Su recuerdo más vívido es el sonido de las vuvuzelas y el gol de Tshabalala."
     },
     { 
       name: "SUIZA", 
       player: "XHAKA", 
       bodyTex: "./modelos/texturas/SUIZA.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇨🇭 ¡La Nati! Suiza tiene un récord único en la historia: en el Mundial de 2006 no recibió ni un solo gol en todo el torneo, aunque quedaron eliminados en penales [citation:1]."
+      info: "Tiene un récord único en la historia: en el Mundial de 2006 no recibió ni un solo gol en todo el torneo, aunque quedaron eliminados en penales."
     },
     { 
       name: "TUNEZ", 
       player: "MSAKNI", 
       bodyTex: "./modelos/texturas/TUNEZ.webp", 
       headTex: "./modelos/texturas/Cara_III.webp",
-      info: "🇹🇳 ¡Las Águilas de Cartago! Túnez fue el primer país africano en ganar un partido de Mundial (1978). Son los eternos aspirantes en África."
+      info: "Fue el primer país africano en ganar un partido de Mundial (1978). Son los eternos aspirantes en África."
     },
     { 
       name: "URUGUAY", 
       player: "SUAREZ", 
       bodyTex: "./modelos/texturas/URUGUAY.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇺🇾 ¡La Celeste! Uruguay ganó el PRIMER Mundial de la historia en 1930 y lo repitió en 1950 (Maracanazo). Con 15 Copas América, son los reyes de América del Sur [citation:2]."
+      info: "Ganó el PRIMER Mundial de la historia en 1930 y lo repitió en 1950 (Maracanazo). Con 15 Copas América, son los reyes de América del Sur."
     },
     { 
       name: "UZBEKISTAN", 
       player: "SHOMURODOV", 
       bodyTex: "./modelos/texturas/UZBEKISTAN.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇺🇿 ¡Los Lobos Blancos! Uzbekistán es la selección revelación de Asia. Aún no han ido a un Mundial, pero son los actuales campeones del fútbol asiático juvenil."
+      info: "Es la selección revelación de Asia. Aún no han ido a un Mundial, pero son los actuales campeones del fútbol asiático juvenil."
     },
     { 
       name: "ALBANIA", 
       player: "BROJA", 
+      flag:"XALBANIA",
       bodyTex: "./modelos/texturas/ALBANIA.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇦🇱 ¡Las Águilas! Albania sorprendió al mundo al clasificar a la Eurocopa 2016. Son un equipo que ha creído en su potencial y lucha contra los gigantes europeos."
+      info: "Sorprendió al mundo al clasificar a la Eurocopa 2016. Son un equipo que ha creído en su potencial y lucha contra los gigantes europeos."
     },
     { 
       name: "BOLIVIA", 
       player: "MIGUEL TERCEROS", 
+      flag:"XBOLIVIA",
       bodyTex: "./modelos/texturas/BOLIVIA.webp", 
       headTex: "./modelos/texturas/Cara_I.webp",
-      info: "🇧🇴 ¡La Verde! Bolivia fue campeón de América en 1963 jugando en su altiplanicie. Son conocidos por jugar en el estadio más alto del mundo (más de 3,600 metros), lo que la hace imbatible de local [citation:2]."
+      info: "Fue campeón de América en 1963 jugando en su altiplanicie. Son conocidos por jugar en el estadio más alto del mundo (más de 3,600 metros), lo que la hace imbatible de local."
     },
     { 
       name: "HONDURAS", 
       player: "LUIS PALMA", 
+      flag:"XHONDURAS",
       bodyTex: "./modelos/texturas/HONDURAS.webp", 
       headTex: "./modelos/texturas/Cara_V.webp",
-      info: "🇭🇳 ¡Los Catrachos! Honduras ha participado en 3 Mundiales (1982, 2010, 2014). Es una selección guerrera que siempre pelea cada partido en la eliminatoria de la Concacaf."
+      info: "Ha participado en 3 Mundiales (1982, 2010, 2014). Es una selección guerrera que siempre pelea cada partido en la eliminatoria de la Concacaf."
     },
     { 
       name: "MALI", 
       player: "BISSOUMA", 
+      flag:"XMALI",
       bodyTex: "./modelos/texturas/MALI.webp", 
       headTex: "./modelos/texturas/Cara_III.webp",
-      info: "🇲🇱 ¡Las Águilas! Malí es una de las potencias emergentes de África. Han sido subcampeones de África y tienen una generación dorada liderada por Yves Bissouma."
+      info: "Es una de las potencias emergentes de África. Han sido subcampeones de África y tienen una generación dorada liderada por Yves Bissouma."
     },
     { 
       name: "OMAN", 
       player: "AL-YAHYAEI", 
+      flag:"XOMAN",
       bodyTex: "./modelos/texturas/OMAN.webp", 
       headTex: "./modelos/texturas/Cara_III.webp",
-      info: "🇴🇲 Los Rojos! Omán es un clásico de la Copa del Golfo, siendo campeones en 2009 y 2017. Buscan dar el salto a la élite del fútbol asiático."
+      info: "Es un clásico de la Copa del Golfo, siendo campeones en 2009 y 2017. Buscan dar el salto a la élite del fútbol asiático."
     },
     { 
       name: "REPUBLICA DOMINICANA DEL CONGO", 
       player: "WISSA", 
+      flag:"XRDCONGO",
       bodyTex: "./modelos/texturas/RDCONGO.webp", 
       headTex: "./modelos/texturas/Cara_III.webp",
-      info: "🇨🇩 ¡Los Leopardos! La RD Congo fue la primera selección africana en clasificar a un Mundial (1974 como Zaire). Son dos veces campeones de África [citation:2]."
+      info: "Fue la primera selección africana en clasificar a un Mundial (1974 como Zaire). Son dos veces campeones de África."
     }
   ];
+  
   
   equipos.forEach((equipo, index) => {
 
@@ -643,114 +1052,143 @@ async function cambiarAModoBase() {
     contentHolder.setAttribute('position', '0 0 0.01');
     targetEntity.appendChild(contentHolder);
 
-    targetEntity.addEventListener("targetFound", async () => {
-      
-      if (modeloPantallaEntity) return;
-      
-          setCustomScannerVisible(false);
-      equipoActual = equipo;
-      
-      const resultado = await crearModeloEnPantalla(equipo, false);
-      if (resultado) {
-        modeloPantallaEntity = resultado;
-      }
-      
-     
-if (!botonActual) {
-    botonActual = document.createElement('button');
-    botonActual.className = 'animate-btn';
-    botonActual.innerText = 'Animar';
-    
-    botonActual.onclick = async () => {
-        if (isChanging) {
-            console.log("Espera a que termine...");
-            return;
-        }
-        if (!equipoActual) return;
-        
-        if (!animado) {
-            await cambiarAModoAnimado();
-        } else {
-            await cambiarAModoBase();
-        }
-    };
-    
-    document.body.appendChild(botonActual);
-}
+  targetEntity.addEventListener("targetFound", async () => {
 
-      if (!botonInfo) {
+    // Incrementar contador de detecciones
+    incrementarContadorDetecciones();
+    
+    if (modeloPantallaEntity) return;
+  
+    if (window._ultimoTarget) {
+        if (window.gc) window.gc();
+        if (modeloPantallaEntity && modeloPantallaEntity.model) {
+            modeloPantallaEntity.model.traverse((node) => {
+                if (node.isMesh) {
+                    if (node.material) {
+                        if (node.material.map) node.material.map.dispose();
+                        node.material.dispose();
+                    }
+                    if (node.geometry) node.geometry.dispose();
+                }
+            });
+        }
+    }
+    window._ultimoTarget = equipo;
+    // ========================================
+    
+    setCustomScannerVisible(false);
+    equipoActual = equipo;
+    
+    const resultado = await crearModeloEnPantalla(equipo, false);
+    if (resultado) {
+        modeloPantallaEntity = resultado;
+    }
+    
+    // ========== CREAR BOTONES (SOLO UNA VEZ) ==========
+    if (!botonActual) {
+        botonActual = document.createElement('button');
+        botonActual.className = 'animate-btn';
+        botonActual.innerText = 'Animar';
+        
+        botonActual.onclick = async () => {
+            if (isChanging) {
+                console.log("Espera a que termine...");
+                return;
+            }
+            if (!equipoActual) return;
+            
+            if (!animado) {
+                await cambiarAModoAnimado();
+            } else {
+                await cambiarAModoBase();
+            }
+        };
+        
+        document.body.appendChild(botonActual);
+    }
+
+    if (!botonInfo) {
         botonInfo = document.createElement('button');
         botonInfo.className = 'info-btn';
         botonInfo.innerText = 'Info';
         
         botonInfo.onclick = () => {
-          if (!panelInfo) {
-            panelInfo = document.createElement('div');
-            panelInfo.className = 'info-panel';
-            panelInfo.innerHTML = `
-              <h2>${equipo.name}</h2>
-              <p>${equipo.info}</p>
-            `;
-            document.body.appendChild(panelInfo);
-          } else {
-            panelInfo.remove();
-            panelInfo = null;
-          }
+            if (!panelInfo) {
+                panelInfo = document.createElement('div');
+                panelInfo.className = 'info-panel';
+                panelInfo.innerHTML = `
+                    <h2>${equipo.name}</h2>
+                    <p>${equipo.info}</p>
+                `;
+                document.body.appendChild(panelInfo);
+            } else {
+                panelInfo.remove();
+                panelInfo = null;
+            }
         };
         
         document.body.appendChild(botonInfo);
-      }
+    }
 
-      if (!botonConfetti) {
+    if (!botonSimulacion) {
+        botonSimulacion = document.createElement("button");
+        botonSimulacion.innerText = "Simulación";
+        botonSimulacion.className = "simulacion-btn-ar";
+        
+        botonSimulacion.onclick = () => {
+            if (equipoActual) {
+                abrirSimulacionModal(equipoActual);
+            }
+        };
+        
+        document.body.appendChild(botonSimulacion);
+    }
+
+    if (!botonConfetti) {
         botonConfetti = document.createElement("button");
         botonConfetti.innerText = "Celebrar";
         botonConfetti.className = "confetti-btn";
         
         botonConfetti.onclick = () => {
-          window.confetti({
-            particleCount: 200,
-            spread: 90,
-            origin: { y: 0.6 }
-          });
+            window.confetti({
+                particleCount: 200,
+                spread: 90,
+                origin: { y: 0.6 }
+            });
         };
         
         document.body.appendChild(botonConfetti);
-      }
+    }
 
-      if (!botonTrivia) {
+    if (!botonTrivia) {
         botonTrivia = document.createElement("button");
         botonTrivia.innerText = "Jugar Trivia";
         botonTrivia.className = "trivia-btn-ar";
         
         const idMap = { 
-          "ALBANIA": "ALB", "ARABIA": "KSA", "ARGELIA": "ALG", "ARGENTINA": "ARG",
-          "AUSTRALIA": "AUS", "AUSTRIA": "AUT", "BELGICA": "BEL", "BOLIVIA": "BOL",
-          "BRASIL": "BRA", "CANADA": "CAN", "COLOMBIA": "COL", "COSTA DE MARFIL": "CIV",
-          "CROACIA": "CRO", "CURAZAO": "CUR", "ECUADOR": "ECU", "EGIPTO": "EGY",
-          "ESCOCIA": "SCO", "ESPAÑA": "ESP", "EUA": "USA", "FRANCIA": "FRA",
-          "GERMANIA": "ALE", "GHANA": "GHA", "HAITI": "HAI", "HONDURAS": "HON",
-          "INGLATERRA": "ING", "ISLAS DEL CABOVERDE": "CPV", "JAPON": "JPN", "JORDANIA": "JOR",
-          "KOREA": "KOR", "MALI": "MLI", "MARRUECOS": "MAR", "MEXICO": "MEX",
-          "NORUEGA": "NOR", "NUEVA ZELANDA": "NZL", "OMAN": "OMA", "PAISES BAJOS": "NED",
-          "PANAMA": "PAN", "PARAGUAY": "PAR", "PORTUGAL": "POR", "QATAR": "QAT",
-          "REPUBLICA DOMINICANA DEL CONGO": "COD", "REPUBLICA DE IRAN": "IRN", "SENEGAL": "SEN",
-          "SUDAFRICA": "RSA", "SUIZA": "SUI", "TUNEZ": "TUN", "URUGUAY": "URU", "UZBEKISTAN": "UZB"
+            "ALBANIA": "ALB", "ARABIA": "KSA", "ARGELIA": "ALG", "ARGENTINA": "ARG",
+            "AUSTRALIA": "AUS", "AUSTRIA": "AUT", "BELGICA": "BEL", "BOLIVIA": "BOL",
+            "BRASIL": "BRA", "CANADA": "CAN", "COLOMBIA": "COL", "COSTA DE MARFIL": "CIV",
+            "CROACIA": "CRO", "CURAZAO": "CUR", "ECUADOR": "ECU", "EGIPTO": "EGY",
+            "ESCOCIA": "SCO", "ESPAÑA": "ESP", "EUA": "USA", "FRANCIA": "FRA",
+            "GERMANIA": "ALE", "GHANA": "GHA", "HAITI": "HAI", "HONDURAS": "HON",
+            "INGLATERRA": "ING", "ISLAS DEL CABOVERDE": "CPV", "JAPON": "JPN", "JORDANIA": "JOR",
+            "KOREA": "KOR", "MALI": "MLI", "MARRUECOS": "MAR", "MEXICO": "MEX",
+            "NORUEGA": "NOR", "NUEVA ZELANDA": "NZL", "OMAN": "OMA", "PAISES BAJOS": "NED",
+            "PANAMA": "PAN", "PARAGUAY": "PAR", "PORTUGAL": "POR", "QATAR": "QAT",
+            "REPUBLICA DOMINICANA DEL CONGO": "COD", "REPUBLICA DE IRAN": "IRN", "SENEGAL": "SEN",
+            "SUDAFRICA": "RSA", "SUIZA": "SUI", "TUNEZ": "TUN", "URUGUAY": "URU", "UZBEKISTAN": "UZB"
         };
         
-        const paisId = idMap[equipo.name.toUpperCase()] || equipo.name.substring(0, 3).toUpperCase();
-        
         botonTrivia.onclick = () => {
-  if (typeof abrirTriviaModal === 'function') {
-    const paisId = idMap[equipo.name.toUpperCase()] || equipo.name.substring(0, 3).toUpperCase();
-    abrirTriviaModal(paisId, equipo.name);
-  } else {
-    console.error("Función abrirTriviaModal no encontrada");
-  }
-};
+            const paisId = idMap[equipo.name.toUpperCase()] || equipo.name.substring(0, 3).toUpperCase();
+            abrirTriviaModal(paisId, equipo.name);
+        };
         
         document.body.appendChild(botonTrivia);
-      }
-      if (!botonActualizar) {
+    }
+    
+    if (!botonActualizar) {
         botonActualizar = document.createElement("button");
         botonActualizar.innerText = "Actualizar";
         botonActualizar.className = "confetti-btn";
@@ -760,13 +1198,42 @@ if (!botonActual) {
         botonActualizar.style.bottom = "auto";
         
         botonActualizar.onclick = () => {
-          refrescarEscena();
+            contadorActualizaciones++;
+
+            if (contadorActualizaciones >= MAX_DETECCIONES) {
+                // 3ra bandera escaneada: mostrar mensaje y recargar página completa
+                const msgReload = document.createElement('div');
+                msgReload.innerText = '🔄 Reiniciando escáner completamente...';
+                msgReload.style.position = 'fixed';
+                msgReload.style.bottom = '30%';
+                msgReload.style.left = '50%';
+                msgReload.style.transform = 'translateX(-50%)';
+                msgReload.style.backgroundColor = '#FFD65C';
+                msgReload.style.color = '#1A1A3A';
+                msgReload.style.padding = '15px 25px';
+                msgReload.style.borderRadius = '15px';
+                msgReload.style.fontWeight = 'bold';
+                msgReload.style.zIndex = '10000';
+                msgReload.style.textAlign = 'center';
+                msgReload.style.fontSize = '1.1rem';
+                msgReload.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+                document.body.appendChild(msgReload);
+
+                setTimeout(() => {
+                    // Limpiamos la marca de refresco automático para que el contador
+                    // de detecciones también arranque desde 0 al recargar
+                    sessionStorage.removeItem('recargando');
+                    location.reload();
+                }, 1800);
+            } else {
+                // Banderas 1 y 2: comportamiento normal
+                refrescarEscena();
+            }
         };
         
         document.body.appendChild(botonActualizar);
-      }
-      
-    });
+    }
+});
 
     targetEntity.addEventListener("targetLost", () => {
       console.log("Bandera perdida, pero modelo permanece");

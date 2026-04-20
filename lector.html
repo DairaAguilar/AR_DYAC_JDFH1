@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Escáner Mundial 2026</title>
-
+ 
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-
+ 
   <link rel="stylesheet" href="lector.css">
-  
+ 
   <style>
     .modal-trivia {
       position: fixed;
@@ -30,12 +30,169 @@
       visibility: hidden;
       transition: all 0.3s ease;
     }
-    
+   
     .modal-trivia.active {
       opacity: 1;
       visibility: visible;
     }
-    
+ 
+    .modal-simulacion {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10001;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+ 
+.modal-simulacion.active {
+    opacity: 1;
+    visibility: visible;
+}
+ 
+.modal-simulacion .modal-content {
+   background: linear-gradient(135deg, #1A1A3A 0%, #2a2a5a 100%);
+    width: 85%;             /* Bajamos de 90% a 85% */
+    max-width: 450px;       /* Bajamos de 600px a 450px */
+    max-height: 75vh;       /* Bajamos de 85vh a 75vh */
+    border-radius: 20px;
+    border: 3px solid #FFD65C;
+    padding: 15px;          /* Bajamos de 20px a 15px */
+    position: relative;
+    overflow-y: auto;
+}
+ 
+.modal-simulacion .modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    color: #FFD65C;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-weight: bold;
+}
+ 
+.simulacion-inline {
+    text-align: center;
+}
+ 
+.simulacion-inline .scoreboard {
+    background: rgba(0,0,0,0.5);
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+ 
+.simulacion-inline .teams {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+ 
+.simulacion-inline .team {
+    flex: 1;
+    text-align: center;
+}
+ 
+.simulacion-inline .team-name {
+    font-size: 1rem;
+    font-weight: bold;
+}
+ 
+.simulacion-inline .team-score {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #FFD65C;
+}
+ 
+.simulacion-inline .vs {
+    font-size: 1rem;
+    font-weight: bold;
+    background: rgba(255,214,92,0.2);
+    padding: 5px 10px;
+    border-radius: 50px;
+}
+ 
+.simulacion-inline .minuto {
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: #1A1A3A;
+    display: inline-block;
+    padding: 5px 20px;
+    border-radius: 50px;
+    border: 2px solid #FFD65C;
+    margin: 10px 0;
+}
+ 
+.simulacion-inline .events-list {
+    max-height: 135px;
+    overflow-y: auto;
+    text-align: left;
+    font-size: 0.8rem;
+    padding-right: 8px;
+    display: flex;
+    flex-direction: column;
+}
+ 
+ 
+.simulacion-inline .events-list::-webkit-scrollbar {
+    width: 8px;
+}
+ 
+.simulacion-inline .events-list::-webkit-scrollbar-track {
+    background: rgba(26, 26, 58, 0.5);
+    border-radius: 10px;
+}
+ 
+.simulacion-inline .events-list::-webkit-scrollbar-thumb {
+    background: #FFD65C;
+    border-radius: 10px;
+    border: 2px solid #1A1A3A;
+}
+ 
+.simulacion-inline .events-list {
+    scrollbar-width: thin;
+    scrollbar-color: #FFD65C rgba(26, 26, 58, 0.5);
+}
+ 
+.simulacion-inline .event-item {
+    display: flex;
+    gap: 10px;
+    padding: 5px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+ 
+.simulacion-inline .event-minute {
+    background: #1A1A3A;
+    padding: 2px 8px;
+    border-radius: 20px;
+    min-width: 40px;
+    text-align: center;
+}
+ 
+.simulacion-inline .event-goal { color: #2ecc71; font-weight: bold; }
+.simulacion-inline .event-own-goal { color: #f39c12; font-weight: bold; }
+.simulacion-inline .event-penalty { color: #FFD65C; font-weight: bold; }
+.simulacion-inline .event-card { color: #FFD65C; }
+.simulacion-inline .event-red { color: #e74c3c; font-weight: bold; }
+ 
+.simulacion-inline .match-status {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #FFD65C;
+}
+   
     .modal-content {
       background: linear-gradient(135deg, #1A1A3A 0%, #2a2a5a 100%);
       width: 90%;
@@ -48,7 +205,7 @@
       overflow-y: auto;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     }
-    
+   
     .modal-close {
       position: absolute;
       top: 15px;
@@ -61,31 +218,31 @@
       font-weight: bold;
       transition: transform 0.2s;
     }
-    
+   
     .modal-close:hover {
       transform: scale(1.2);
     }
-    
+   
     .modal-title {
       text-align: center;
       color: #FFD65C;
-      font-size: 1.8rem;
-      margin-bottom: 20px;
+      font-size: 1.2rem !important;
+    margin-bottom: 10px !important;
       font-family: sans-serif;
     }
-    
+   
     .modal-body {
       color: white;
       font-family: sans-serif;
     }
-    
+   
     .quiz-card-modal {
       background: rgba(255, 255, 255, 0.1);
       padding: 20px;
       border-radius: 15px;
       border: 1px solid #FFD65C;
     }
-    
+   
     .progress-bar-modal {
       width: 100%;
       height: 10px;
@@ -94,21 +251,21 @@
       margin-bottom: 20px;
       overflow: hidden;
     }
-    
+   
     .progress-fill-modal {
       width: 0%;
       height: 100%;
       background: #FFD65C;
       transition: width 0.3s ease;
     }
-    
+   
     .options-grid-modal {
       display: grid;
       grid-template-columns: 1fr;
       gap: 10px;
       margin-top: 20px;
     }
-    
+   
     .option-btn-modal {
       background: transparent;
       border: 1px solid white;
@@ -120,32 +277,32 @@
       font-size: 0.95rem;
       text-align: left;
     }
-    
+   
     .option-btn-modal:hover {
       background: rgba(255, 214, 92, 0.2);
       border-color: #FFD65C;
     }
-    
+   
     .option-btn-modal.correct {
       background: #28a745 !important;
       border-color: #28a745 !important;
     }
-    
+   
     .option-btn-modal.incorrect {
       background: #dc3545 !important;
       border-color: #dc3545 !important;
     }
-    
+   
     .feedback-modal {
       margin-top: 20px;
       font-weight: bold;
       text-align: center;
     }
-    
+   
     .result-screen-modal {
       text-align: center;
     }
-    
+   
     .final-score-modal {
       font-size: 2rem;
       margin: 20px 0;
@@ -154,7 +311,7 @@
   </style>
 </head>
 <body>
-
+ 
   <div id="loading-overlay">
     <div class="loader-content">
       <div class="spinner"></div>
@@ -162,9 +319,9 @@
       <p>Inicializando cámara...</p>
     </div>
   </div>
-
+ 
   <button onclick="window.history.back()" class="back-btn" style="position: fixed; top: 20px; left: 20px; z-index: 10000;">VOLVER</button>
-
+ 
   <div id="ui-overlay">
     <div class="scanner-corner top-left"></div>
     <div class="scanner-corner top-right"></div>
@@ -172,7 +329,7 @@
     <div class="scanner-corner bottom-right"></div>
     <div class="scanning-line"></div>
   </div>
-
+ 
 <div id="custom-scanner-overlay" style="display: flex;">
     <div class="custom-scanner-corner top-left"></div>
     <div class="custom-scanner-corner top-right"></div>
@@ -180,7 +337,7 @@
     <div class="custom-scanner-corner bottom-right"></div>
     <div class="custom-scanning-line"></div>
 </div>
-
+ 
   <div id="modalTrivia" class="modal-trivia">
     <div class="modal-content">
       <button class="modal-close" id="closeModalBtn">&times;</button>
@@ -189,7 +346,17 @@
       </div>
     </div>
   </div>
-
+ 
+ 
+<div id="modalSimulacion" class="modal-simulacion">
+    <div class="modal-content">
+        <button class="modal-close" id="closeSimulacionBtn">&times;</button>
+        <h2 class="modal-title" id="simulacionTitle">SIMULACION DE PARTIDO</h2>
+        <div id="simulacionBody" class="simulacion-inline">
+        </div>
+    </div>
+</div>
+ 
  <a-scene
     id="ar-scene"
     mindar-image="imageTargetSrc: ./banderas2.mind; autoStart: true; filterMinCF: 0.0005; filterBeta: 0.001; uiScanning: false; uiLoading: false;"
@@ -197,29 +364,29 @@
     renderer="colorManagement: true, physicallyCorrectLights"
     vr-mode-ui="enabled: false"
 >
-
+ 
     <a-assets id="assets-container">
       <a-asset-item id="jugador-base" src="./modelos/jugador_base5.glb"></a-asset-item>
       <a-asset-item id="jugador-animado" src="./modelos/jugador_animado3.glb"></a-asset-item>
     </a-assets>
-
+ 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-
+ 
   </a-scene>
-
+ 
   <script src="lector.js"></script>
   <script src="preguntas.js"></script>
-  
+ 
   <script>
     let modalTrivia = document.getElementById('modalTrivia');
     let currentQuestionIndex = 0;
     let score = 0;
     let currentPreguntas = null;
     let totalQuestions = 0;
-    
+   
     function abrirTriviaModal(paisId, equipoName) {
       const preguntas = bancoPreguntas[paisId];
-      
+     
       if (!preguntas || preguntas.length === 0) {
         document.getElementById('modalBody').innerHTML = `
           <div style="text-align: center; padding: 20px;">
@@ -231,27 +398,27 @@
         modalTrivia.classList.add('active');
         return;
       }
-
+ 
       currentQuestionIndex = 0;
       score = 0;
       currentPreguntas = preguntas;
       totalQuestions = preguntas.length;
-
+ 
       document.getElementById('modalTitle').innerHTML = `${equipoName} ⚽`;
       modalTrivia.classList.add('active');
-
+ 
       mostrarPreguntaModal();
     }
-    
+   
     function mostrarPreguntaModal() {
       if (currentQuestionIndex >= currentPreguntas.length) {
         mostrarResultadosModal();
         return;
       }
-      
+     
       const question = currentPreguntas[currentQuestionIndex];
       const progressPercent = (currentQuestionIndex / totalQuestions) * 100;
-      
+     
       let html = `
         <div class="quiz-card-modal">
           <div class="progress-bar-modal">
@@ -260,7 +427,7 @@
           <h3 style="margin-bottom: 15px;">${currentQuestionIndex + 1}. ${question.q}</h3>
           <div class="options-grid-modal" id="optionsModal">
       `;
-      
+     
       question.options.forEach((option, idx) => {
         html += `
           <button class="option-btn-modal" data-index="${idx}" onclick="seleccionarRespuestaModal(${idx}, ${question.correct})">
@@ -268,20 +435,20 @@
           </button>
         `;
       });
-      
+     
       html += `
           </div>
           <div id="feedbackModal" class="feedback-modal"></div>
         </div>
       `;
-      
+     
       document.getElementById('modalBody').innerHTML = html;
     }
-    
+   
     function seleccionarRespuestaModal(selectedIndex, correctIndex) {
       const buttons = document.querySelectorAll('.option-btn-modal');
       let isCorrect = (selectedIndex === correctIndex);
-      
+     
       if (isCorrect) {
         buttons[selectedIndex].classList.add('correct');
         score++;
@@ -292,18 +459,18 @@
         document.getElementById('feedbackModal').innerHTML = '<span style="color: #dc3545;">Incorrecto</span>';
       }
       buttons.forEach(btn => btn.disabled = true);
-
+ 
       setTimeout(() => {
         currentQuestionIndex++;
         mostrarPreguntaModal();
       }, 1500);
     }
-    
+   
     function mostrarResultadosModal() {
       const porcentaje = (score / totalQuestions) * 100;
       let mensaje = "";
       let color = "";
-      
+     
       if (porcentaje >= 70) {
         mensaje = "¡Felicidades! Eres un experto mundialista. ";
         color = "#28a745";
@@ -314,7 +481,7 @@
         mensaje = "Sigue practicando... ¡la próxima será mejor!";
         color = "#dc3545";
       }
-      
+     
       const html = `
         <div class="result-screen-modal">
           <h2 style="color: #FFD65C;">RESULTADOS FINALES</h2>
@@ -325,9 +492,9 @@
           </button>
         </div>
       `;
-      
+     
       document.getElementById('modalBody').innerHTML = html;
-
+ 
       if (porcentaje >= 70) {
         window.confetti({
           particleCount: 150,
@@ -336,13 +503,13 @@
         });
       }
     }
-    
+   
     function cerrarModalTrivia() {
       modalTrivia.classList.remove('active');
       document.getElementById('modalBody').innerHTML = '';
     }
-  
-    
+ 
+   
     document.getElementById('closeModalBtn').onclick = cerrarModalTrivia;
     modalTrivia.onclick = (e) => {
       if (e.target === modalTrivia) cerrarModalTrivia();
