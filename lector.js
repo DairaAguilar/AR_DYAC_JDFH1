@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let panelInfo = null;
   let botonConfetti = null;
   let botonActualizar = null;
+
+  let isChanging = false;
   
   let modeloPantalla = null;
   let modeloPantallaEntity = null;
@@ -210,29 +212,47 @@ setCustomScannerVisible(true);
   
   async function cambiarAModoAnimado() {
     if (!equipoActual) return;
+    if (isChanging) return;
     
-    eliminarModeloPantalla();
+    isChanging = true;  
     
-    const resultado = await crearModeloEnPantalla(equipoActual, true);
-    if (resultado) {
-      modeloPantallaEntity = resultado;
-      animado = true;
-      if (botonActual) botonActual.innerText = "Detener animación";
+    try {
+        eliminarModeloPantalla();
+        const resultado = await crearModeloEnPantalla(equipoActual, true);
+        
+        if (resultado) {
+            modeloPantallaEntity = resultado;
+            animado = true;
+            if (botonActual) botonActual.innerText = "Detener animación";
+        }
+    } catch (error) {
+        console.error("Error al cambiar a modo animado:", error);
+    } finally {
+        isChanging = false; 
     }
-  }
+}
 
-  async function cambiarAModoBase() {
+async function cambiarAModoBase() {
     if (!equipoActual) return;
+    if (isChanging) return;
     
-    eliminarModeloPantalla();
+    isChanging = true;  
     
-    const resultado = await crearModeloEnPantalla(equipoActual, false);
-    if (resultado) {
-      modeloPantallaEntity = resultado;
-      animado = false;
-      if (botonActual) botonActual.innerText = "Animar";
+    try {
+        eliminarModeloPantalla();
+        const resultado = await crearModeloEnPantalla(equipoActual, false);
+        
+        if (resultado) {
+            modeloPantallaEntity = resultado;
+            animado = false;
+            if (botonActual) botonActual.innerText = "Animar";
+        }
+    } catch (error) {
+        console.error("Error al cambiar a modo base:", error);
+    } finally {
+        isChanging = false;  
     }
-  }
+}
   
  function refrescarEscena() {
     eliminarModeloPantalla();
@@ -635,23 +655,28 @@ setCustomScannerVisible(true);
         modeloPantallaEntity = resultado;
       }
       
-      if (!botonActual) {
-        botonActual = document.createElement('button');
-        botonActual.className = 'animate-btn';
-        botonActual.innerText = 'Animar';
+     
+if (!botonActual) {
+    botonActual = document.createElement('button');
+    botonActual.className = 'animate-btn';
+    botonActual.innerText = 'Animar';
+    
+    botonActual.onclick = async () => {
+        if (isChanging) {
+            console.log("Espera a que termine...");
+            return;
+        }
+        if (!equipoActual) return;
         
-        botonActual.onclick = async () => {
-          if (!equipoActual) return;
-          
-          if (!animado) {
+        if (!animado) {
             await cambiarAModoAnimado();
-          } else {
+        } else {
             await cambiarAModoBase();
-          }
-        };
-        
-        document.body.appendChild(botonActual);
-      }
+        }
+    };
+    
+    document.body.appendChild(botonActual);
+}
 
       if (!botonInfo) {
         botonInfo = document.createElement('button');
