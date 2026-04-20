@@ -16,6 +16,10 @@ function resetFilters() {
     saturateInput.value = 100;  
 }
 
+video.addEventListener('ended', () => {
+    video.currentTime = 0;
+    video.play();
+});
 
 function togglePlayPause() {
     if (video.paused) {
@@ -75,25 +79,22 @@ function renderFrame() {
     requestAnimationFrame(renderFrame);
 }
 
+
 function changeVideo(newSrc, element) {
     resetFilters();
-
-    console.log("Cambiando video de equipo a:", newSrc);
     
-    const wasPlaying = !video.paused;
+    console.log("Cambiando video a:", newSrc);
     
     video.src = newSrc;
     video.load();
     
-    if (wasPlaying) {
-        video.play().catch(e => console.log("Error al reproducir video: ", e));
-        playPauseBtn.innerHTML = 'Pausa';
-        isPlaying = true;
-    } else {
-        playPauseBtn.innerHTML = 'Play';
-        isPlaying = false;
-    }
+    video.currentTime = 0;
 
+    video.play().catch(e => console.log("Error al reproducir video: ", e));
+    
+    playPauseBtn.innerHTML = 'Pausa';
+    isPlaying = true;
+    
     document.querySelectorAll('.btn-equipo').forEach(t => t.classList.remove('active'));
     element.classList.add('active');
 }
