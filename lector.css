@@ -1,5 +1,4 @@
- 
-body {
+ body {
     margin: 0;
     overflow: hidden;
 }
@@ -154,13 +153,13 @@ body {
 .info-panel {
     position: fixed;
     left: 20px;
-    bottom: 140px;        /* Misma posición de antes */
+    bottom: 140px;       
     width: 250px;
     background: rgba(0,0,0,0.85);
     color: white;
     padding: 15px;
     border-radius: 15px;
-    z-index: 2000;        /* Cambia de 1001 a 2000 o más */
+    z-index: 2000;       
 }
  
 .modal-trivia {

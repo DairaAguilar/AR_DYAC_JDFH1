@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let botonSimulacion = null;
 
-  // Contador de veces que se presiona "Actualizar" (se resetea solo al recargar la página)
   let contadorActualizaciones = 0;
 
   let isChanging = false;
@@ -25,15 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
   let contenidoHolderGlobal = null;
 
 
-  //NUEVOABAJO
-  // ========== CONTADOR DE DETECCIONES PARA REFRESCO AUTOMÁTICO ==========
-const MAX_DETECCIONES = 15;  // Cambia a 16 para producción
+const MAX_DETECCIONES = 15;  
 let refrescoProgramado = false;
 
 function mostrarMensajeRefresco() {
     const mensaje = document.createElement('div');
     mensaje.id = 'mensaje-refresco';
-    mensaje.innerText = `🔄 Se alcanzaron ${MAX_DETECCIONES} escaneos. Refrescando para mejor rendimiento...`;
+    mensaje.innerText = `Se alcanzaron ${MAX_DETECCIONES} escaneos. Refrescando para mejor rendimiento...`;
     mensaje.style.position = 'fixed';
     mensaje.style.bottom = '30%';
     mensaje.style.left = '50%';
@@ -402,8 +399,7 @@ function abrirSimulacionModal(objEquipoLocal) {
     const equipoRivalName = determinarRivalAleatorio(objEquipoLocal.name);
     document.getElementById('simulacionTitle').innerHTML = `${objEquipoLocal.name} vs ${equipoRivalName}`;
     document.getElementById('modalSimulacion').classList.add('active');
-    
-    // Buscamos el objeto del rival en el array para obtener su posible propiedad 'flag'
+
     const objEquipoRival = equipos.find(e => e.name === equipoRivalName);
     
     iniciarSimulacionEnModal(objEquipoLocal, objEquipoRival);
@@ -645,8 +641,8 @@ async function cambiarAModoBase() {
 }
   
  function refrescarEscena() {
-   contadorDetecciones = 0;  // ← AGREGAR ESTA LÍNEA
-    refrescoProgramado = false;  // ← AGREGAR ESTA LÍNEA
+   contadorDetecciones = 0; 
+    refrescoProgramado = false;
       resetearContador(); 
           sessionStorage.removeItem('recargando');  
     eliminarModeloPantalla();
@@ -1054,7 +1050,6 @@ async function cambiarAModoBase() {
 
   targetEntity.addEventListener("targetFound", async () => {
 
-    // Incrementar contador de detecciones
     incrementarContadorDetecciones();
     
     if (modeloPantallaEntity) return;
@@ -1074,7 +1069,6 @@ async function cambiarAModoBase() {
         }
     }
     window._ultimoTarget = equipo;
-    // ========================================
     
     setCustomScannerVisible(false);
     equipoActual = equipo;
@@ -1083,8 +1077,7 @@ async function cambiarAModoBase() {
     if (resultado) {
         modeloPantallaEntity = resultado;
     }
-    
-    // ========== CREAR BOTONES (SOLO UNA VEZ) ==========
+  
     if (!botonActual) {
         botonActual = document.createElement('button');
         botonActual.className = 'animate-btn';
@@ -1201,7 +1194,6 @@ async function cambiarAModoBase() {
             contadorActualizaciones++;
 
             if (contadorActualizaciones >= MAX_DETECCIONES) {
-                // 3ra bandera escaneada: mostrar mensaje y recargar página completa
                 const msgReload = document.createElement('div');
                 msgReload.innerText = '🔄 Reiniciando escáner completamente...';
                 msgReload.style.position = 'fixed';
@@ -1220,13 +1212,10 @@ async function cambiarAModoBase() {
                 document.body.appendChild(msgReload);
 
                 setTimeout(() => {
-                    // Limpiamos la marca de refresco automático para que el contador
-                    // de detecciones también arranque desde 0 al recargar
                     sessionStorage.removeItem('recargando');
                     location.reload();
                 }, 1800);
             } else {
-                // Banderas 1 y 2: comportamiento normal
                 refrescarEscena();
             }
         };
