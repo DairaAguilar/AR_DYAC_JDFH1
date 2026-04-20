@@ -128,7 +128,7 @@ setCustomScannerVisible(true);
     
     
     const loader = new THREE.GLTFLoader();
-    const modeloUrl = esAnimado ? './modelos/jugador_animado2.glb' : './modelos/jugador_base2.glb';
+    const modeloUrl = esAnimado ? './modelos/jugador_animado3.glb' : './modelos/jugador_base5.glb';
     
     loader.load(modeloUrl, async (gltf) => {
       const model = gltf.scene;
@@ -277,391 +277,343 @@ setCustomScannerVisible(true);
     { 
       name: "ARGELIA", 
       player: "MAHREZ", 
-      bodyTex: "./modelos/texturas/ARGELIA.png", 
-      bodyTexAnim: "./modelos/texturas/ARGELIA.png", 
-      headTex: "./modelos/texturas/Cara_III.png",
-      info: "Argelia ganó la Copa Africana de Naciones en 1990 y 2019. Su capital es Argel."
+      bodyTex: "./modelos/texturas/ARGELIA.webp", 
+      headTex: "./modelos/texturas/Cara_III.webp",
+      info: "🇩🇿 ¡Campeones de África! La selección de Argelia ha ganado 2 Copas Africanas de Naciones (1990 y 2019). Su jugador más emblemático es Riyad Mahrez, y su capital es Argel."
     },
     { 
       name: "ARABIA", 
       player: "AL-DAWSARI", 
-      bodyTex: "./modelos/texturas/ARABIA.png", 
-      bodyTexAnim: "./modelos/texturas/ARABIA.png", 
-      headTex: "./modelos/texturas/Cara_III.png",
-      info: "Arabia Saudita ha ganado la Copa Asiática en 3 ocasiones. Su capital es Riad."
+      bodyTex: "./modelos/texturas/ARABIA.webp", 
+      headTex: "./modelos/texturas/Cara_III.webp",
+      info: "🇸🇦 ¡Los Halcones Verdes! Arabia Saudita tiene 3 títulos de la Copa Asiática (1984, 1988 y 1996). En 2022 logró una de las mayores sorpresas al vencer 2-1 a la campeona Argentina [citation:3][citation:5]."
     },
     { 
       name: "ARGENTINA", 
       player: "LIONEL MESSI", 
-      bodyTex: "./modelos/texturas/ARGENTINA.png", 
-      bodyTexAnim: "./modelos/texturas/ARGENTINA.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Argentina ganó el Mundial en 1978, 1986 y 2022. Su capital es Buenos Aires."
+      bodyTex: "./modelos/texturas/ARGENTINA.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇦🇷 ¡La Albiceleste es tricampeona del mundo! Ganó los Mundiales de 1978, 1986 y 2022. Con Leo Messi a la cabeza, también tiene 16 Copas América, siendo el rey de Sudamérica [citation:2]."
     },
     { 
       name: "AUSTRALIA", 
       player: "KOUL", 
-      bodyTex: "./modelos/texturas/AUSTRALIA.png", 
-      bodyTexAnim: "./modelos/texturas/AUSTRALIA.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Australia ganó la Copa Asiática en 2015 y 4 Copas de Oceanía. Su capital es Canberra."
+      bodyTex: "./modelos/texturas/AUSTRALIA.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇦🇺 ¡Los Socceroos! Australia ha ganado la Copa de las Naciones de la OFC 4 veces y la Copa Asiática 1 vez (2015). Son el equipo que ha saltado de confederación (Oceanía a Asia) para buscar mayores retos [citation:2]."
     },
     { 
       name: "AUSTRIA", 
       player: "ALMAUTOVIK", 
-      bodyTex: "./modelos/texturas/AUSTRIA.png", 
-      bodyTexAnim: "./modelos/texturas/AUSTRIA.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Austria logró el tercer lugar en el Mundial de 1954. Su capital es Viena."
+      bodyTex: "./modelos/texturas/AUSTRIA.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇦🇹 ¡Wunderteam! Austria logró su mejor puesto en un Mundial en 1954, alcanzando las semifinales y quedando en tercer lugar. Su capital, Viena, es una de las más musicales del mundo."
     },
     { 
       name: "BELGICA", 
       player: "DE BRUYNE", 
-      bodyTex: "./modelos/texturas/BELGICA.png", 
-      bodyTexAnim: "./modelos/texturas/BELGICA.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Bélgica obtuvo el tercer lugar en el Mundial de Rusia 2018. Su capital es Bruselas."
+      bodyTex: "./modelos/texturas/BELGICA.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇧🇪 ¡Los Diablos Rojos! Bélgica fue la revelación en Rusia 2018, logrando el tercer lugar. Su 'Generación Dorada' encabezada por De Bruyne y Courtois es histórica [citation:8]."
     },
     { 
       name: "BRASIL", 
       player: "NEYMAR JR", 
-      bodyTex: "./modelos/texturas/BRASIL.png", 
-      bodyTexAnim: "./modelos/texturas/BRASIL.png", 
-      headTex: "./modelos/texturas/Cara_IV.png",
-      info: "Brasil es el único pentacampeón del mundo (1958, 1962, 1970, 1994, 2002). Su capital es Brasilia."
+      bodyTex: "./modelos/texturas/BRASIL.webp", 
+      headTex: "./modelos/texturas/Cara_IV.webp",
+      info: "🇧🇷 ¡El pentacampeón! Brasil es la selección más ganadora del mundo con 5 Copas del Mundo (1958, 1962, 1970, 1994, 2002). Son los reyes del fútbol, aunque una curiosidad es que nunca han podido vencer a Noruega [citation:1][citation:2]."
     },
     { 
       name: "CANADA", 
       player: "DAVIES", 
-      bodyTex: "./modelos/texturas/CANADA.png", 
-      bodyTexAnim: "./modelos/texturas/CANADA.png", 
-      headTex: "./modelos/texturas/Cara_V.png",
-      info: "Canadá ganó la Copa de Oro de la Concacaf en 1985 y 2000. Su capital es Ottawa."
+      bodyTex: "./modelos/texturas/CANADA.webp", 
+      headTex: "./modelos/texturas/Cara_V.webp",
+      info: "🇨🇦 ¡La Hoja de Maple! Canadá es uno de los anfitriones del Mundial 2026. Ha ganado 2 Copas de Oro de la Concacaf (1985 y 2000). Su estrella Alphonso Davies es el más rápido del mundo."
     },
     { 
       name: "COLOMBIA", 
       player: "JAMES RODRIGUEZ", 
-      bodyTex: "./modelos/texturas/COLOMBIA.png", 
-      bodyTexAnim: "./modelos/texturas/COLOMBIA.png", 
-      headTex: "./modelos/texturas/Cara_V.png",
-      info: "Colombia fue campeona de la Copa América en el año 2001. Su capital es Bogotá."
+      bodyTex: "./modelos/texturas/COLOMBIA.webp", 
+      headTex: "./modelos/texturas/Cara_V.webp",
+      info: "🇨🇴 ¡Los Cafeteros! Colombia logró su mejor participación en Brasil 2014 llegando a cuartos de final, donde James Rodríguez fue el goleador del torneo con 6 goles."
     },
     { 
       name: "COSTA DE MARFIL", 
       player: "HALLER", 
-      bodyTex: "./modelos/texturas/COSTADEMARFIL.png", 
-      bodyTexAnim: "./modelos/texturas/COSTADEMARFIL.png", 
-      headTex: "./modelos/texturas/Cara_V.png",
-      info: "Costa de Marfil ha ganado la Copa Africana en 1992, 2015 y 2023. Su capital es Yamusukro."
+      bodyTex: "./modelos/texturas/COSTADEMARFIL.webp", 
+      headTex: "./modelos/texturas/Cara_V.webp",
+      info: "🇨🇮 ¡Los Elefantes! Son los actuales campeones de África, ganando su tercera Copa Africana de Naciones en 2023. Figuras como Didier Drogba los hicieron famosos [citation:4][citation:6]."
     },
     { 
       name: "CROACIA", 
       player: "JAMES", 
-      bodyTex: "./modelos/texturas/CROACIA.png", 
-      bodyTexAnim: "./modelos/texturas/CROACIA.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Croacia fue subcampeona del mundo en 2018 y tercera en 1998 y 2022. Su capital es Zagreb."
+      bodyTex: "./modelos/texturas/CROACIA.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇭🇷 ¡Vatreni! La selección más guerrera. Fue subcampeona del Mundo en 2018 y tercera en 2022. A pesar de tener solo 4 millones de habitantes, son un gigante del fútbol."
     },
     { 
       name: "CURAZAO", 
       player: "MARTIN", 
-      bodyTex: "./modelos/texturas/CURAZAO.png", 
-      bodyTexAnim: "./modelos/texturas/CURAZAO.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Curazao ganó la Copa del Caribe en 2017. Su capital es Willemstad."
+      bodyTex: "./modelos/texturas/CURAZAO.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇨🇼 ¡La Familia Azul! Aunque no ha ido a un Mundial absoluto, tienen un dato curioso: es el país más pequeño (en población) que ha logrado hazañas en la CONCACAF [citation:1]."
     },
     { 
       name: "ECUADOR", 
       player: "ENNER VALENCIA", 
-      bodyTex: "./modelos/texturas/ECUADOR.png", 
-      bodyTexAnim: "./modelos/texturas/ECUADOR.png", 
-      headTex: "./modelos/texturas/Cara_IV.png",
-      info: "Ecuador ha clasificado a 4 mundiales, destacando Alemania 2006. Su capital es Quito."
+      bodyTex: "./modelos/texturas/ECUADOR.webp", 
+      headTex: "./modelos/texturas/Cara_IV.webp",
+      info: "🇪🇨 ¡La Tricolor! Ecuador fue el último país de Sudamérica en debutar en un Mundial (2002). Su mejor participación fue en Alemania 2006, llegando a octavos de final [citation:1]."
     },
     { 
       name: "EGIPTO", 
       player: "SALAH", 
-      bodyTex: "./modelos/texturas/EGIPTO.png", 
-      bodyTexAnim: "./modelos/texturas/EGIPTO.png", 
-      headTex: "./modelos/texturas/Cara_III.png",
-      info: "Egipto es el máximo ganador de la Copa Africana con 7 títulos. Su capital es El Cairo."
+      bodyTex: "./modelos/texturas/EGIPTO.webp", 
+      headTex: "./modelos/texturas/Cara_III.webp",
+      info: "🇪🇬 ¡Los Faraones! Egipto es el rey de África con 7 Copas Africanas de Naciones. Con Mohamed Salah como estrella, buscan dejar huella en los Mundiales [citation:2]."
     },
     { 
       name: "ESCOCIA", 
       player: "ROBERTSON", 
-      bodyTex: "./modelos/texturas/ESCOCIA.png", 
-      bodyTexAnim: "./modelos/texturas/ESCOCIA.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Escocia disputó el primer partido internacional de la historia en 1872. Su capital es Edimburgo."
+      bodyTex: "./modelos/texturas/ESCOCIA.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🏴󠁧󠁢󠁳󠁣󠁴󠁿 ¡La legendaria Escocia! Son conocidos por ser la única selección que venció a Inglaterra cuando estos eran campeones del mundo (1967). Su capitán es Andy Robertson del Liverpool."
     },
     { 
       name: "ESPAÑA", 
       player: "RODRII", 
-      bodyTex: "./modelos/texturas/ESPAÑA.png", 
-      bodyTexAnim: "./modelos/texturas/ESPAÑA.png", 
-      headTex: "./modelos/texturas/Cara_II.jpg",
-      info: "España ganó el Mundial en 2010 y las Eurocopas de 1964, 2008, 2012 y 2024. Su capital es Madrid."
+      bodyTex: "./modelos/texturas/ESPAÑA.webp", 
+      headTex: "./modelos/texturas/Cara_II.webp",
+      info: "🇪🇸 ¡La Furia Roja! España es campeona del mundo (2010) y tiene 4 títulos de la Eurocopa (1964, 2008, 2012, 2024). Su época de oro con el 'tiki-taka' revolucionó el fútbol [citation:2]."
     },
     { 
       name: "EUA", 
       player: "PULISIC", 
-      bodyTex: "./modelos/texturas/EUA.png", 
-      bodyTexAnim: "./modelos/texturas/EUA.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "EUA ha ganado 7 veces la Copa de Oro de la Concacaf. Su capital es Washington D.C."
+      bodyTex: "./modelos/texturas/EUA.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇺🇸 ¡Las Barras y las Estrellas! EE.UU. es potencia en la Concacaf con 7 Copas de Oro. Anfitrión del Mundial 2026, su mejor puesto histórico fue el tercer lugar en el primer Mundial de 1930 [citation:2]."
     },
     { 
       name: "FRANCIA", 
       player: "MBAPPÉ", 
-      bodyTex: "./modelos/texturas/FRANCIA.png", 
-      bodyTexAnim: "./modelos/texturas/FRANCIA.png", 
-      headTex: "./modelos/texturas/Cara_V.png",
-      info: "Francia ganó el Mundial en 1998 y 2018. Su capital es París."
+      bodyTex: "./modelos/texturas/FRANCIA.webp", 
+      headTex: "./modelos/texturas/Cara_V.webp",
+      info: "🇫🇷 ¡Les Bleus! Francia es bicampeona del mundo (1998 y 2018) y fue finalista en 2022. Tienen una de las canteras más ricas del planeta, con Kylian Mbappé como máxima estrella [citation:2]."
     },
      { 
       name: "GHANA", 
       player: "AYEW", 
-      bodyTex: "./modelos/texturas/GHANA.png", 
-      bodyTexAnim: "./modelos/texturas/GHANA.png", 
-      headTex: "./modelos/texturas/Cara_V.png",
-      info: "Ghana ha ganado 4 veces la Copa Africana de Naciones. Su capital es Acra."
+      bodyTex: "./modelos/texturas/GHANA.webp", 
+      headTex: "./modelos/texturas/Cara_V.webp",
+      info: "🇬🇭 ¡Black Stars! Ghana es la única selección africana que ha llegado a cuartos de final en un Mundial (2010). Fueron campeones africanos 4 veces [citation:1][citation:2]."
     },
     
     { 
       name: "GERMANIA", 
       player: "MÜLLER", 
-      bodyTex: "./modelos/texturas/ALEMANIA.png", 
-      bodyTexAnim: "./modelos/texturas/ALEMANIA.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Alemania ganó el Mundial en 1954, 1974, 1990 y 2014. Su capital es Berlín."
+      bodyTex: "./modelos/texturas/ALEMANIA.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇩🇪 ¡La Maquinaria Alemana! Son tetracampeones del mundo (1954, 1974, 1990, 2014). El legendario Miroslav Klose es el máximo goleador histórico de los Mundiales con 16 goles [citation:1][citation:2]."
     },
    
     { 
       name: "HAITI", 
       player: "NAZON", 
-      bodyTex: "./modelos/texturas/HAITI.png", 
-      bodyTexAnim: "./modelos/texturas/HAITI.png", 
-      headTex: "./modelos/texturas/Cara_V.png",
-      info: "Haití ganó el Campeonato de la Concacaf en 1973. Su capital es Puerto Príncipe."
+      bodyTex: "./modelos/texturas/HAITI.webp", 
+      headTex: "./modelos/texturas/Cara_V.webp",
+      info: "🇭🇹 ¡Los Granaderos! Haití fue el primer país caribeño en clasificar a un Mundial (1974). En ese torneo, le metieron un susto a la poderosa Italia de la época."
     },
     { 
       name: "INGLATERRA", 
       player: "KANE", 
-      bodyTex: "./modelos/texturas/INGLATERRA.png", 
-      bodyTexAnim: "./modelos/texturas/INGLATERRA.png",
-      headTex: "./modelos/texturas/Cara_IV.png",
-      info: "Inglaterra ganó el Mundial en 1966 organizado en su propio país. Su capital es Londres."
+      bodyTex: "./modelos/texturas/INGLATERRA.webp", 
+      headTex: "./modelos/texturas/Cara_IV.webp",
+      info: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 ¡Los Tres Leones! La cuna del fútbol fue campeona del mundo en 1966 en su casa, Wembley. Con Harry Kane, buscan repetir la hazaña 60 años después."
     },
     { 
       name: "ISLAS DEL CABOVERDE", 
       player: "RODRIGUES", 
-      bodyTex: "./modelos/texturas/CABOVERDE.png", 
-      bodyTexAnim: "./modelos/texturas/CABOVERDE.png", 
-      headTex: "./modelos/texturas/Cara_V.png",
-      info: "Cabo Verde alcanzó los cuartos de final de la Copa Africana en 2013 y 2023. Su capital es Praia."
+      bodyTex: "./modelos/texturas/CABOVERDE.webp", 
+      headTex: "./modelos/texturas/Cara_V.webp",
+      info: "🇨🇻 ¡Los Tiburones Azules! Cabo Verde ha sorprendido al mundo llegando a cuartos de final de la Copa Africana. Son la revelación africana de los últimos años."
     },
     { 
       name: "JAPON", 
       player: "MINAMINO", 
-      bodyTex: "./modelos/texturas/JAPAN.png", 
-      bodyTexAnim: "./modelos/texturas/JAPAN.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Japón es el máximo ganador de la Copa Asiática con 4 títulos. Su capital es Tokio."
+      bodyTex: "./modelos/texturas/JAPAN.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇯🇵 ¡Samurái Blue! Japón es el país asiático con más títulos de la Copa Asiática (4). Son famosos por su disciplina y por derrotar a potencias como Alemania y España en 2022 [citation:1][citation:2]."
     },
     { 
       name: "JORDANIA", 
       player: "AL-TAMARI", 
-      bodyTex: "./modelos/texturas/JORDANIA.png", 
-      bodyTexAnim: "./modelos/texturas/JORDANIA.png", 
-      headTex: "./modelos/texturas/Cara_III.png",
-      info: "Jordania fue subcampeona de la Copa Asiática en 2023. Su capital es Amán."
+      bodyTex: "./modelos/texturas/JORDANIA.webp", 
+      headTex: "./modelos/texturas/Cara_III.webp",
+      info: "🇯🇴 ¡Los Nashama! Jordania ha crecido enormemente, alcanzando la final de la Copa Asiática 2023. Son un equipo en constante evolución en Asia."
     },
     { 
       name: "KOREA", 
       player: "TAREMI", 
-      bodyTex: "./modelos/texturas/KOREA.png", 
-      bodyTexAnim: "./modelos/texturas/KOREA.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Corea del Sur fue semifinalista en el Mundial de 2002. Su capital es Seúl."
+      bodyTex: "./modelos/texturas/KOREA.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇰🇷 ¡Tigres de Asia! Corea del Sur es la selección asiática más exitosa en Mundiales, logrando el histórico cuarto lugar en 2002. Su estrella es Son Heung-min."
     },
     { 
       name: "MARRUECOS", 
       player: "HAKIMI", 
-      bodyTex: "./modelos/texturas/MARRUECOS.png", 
-      bodyTexAnim: "./modelos/texturas/MARRUECOS.png", 
-      headTex: "./modelos/texturas/Cara_III.png",
-      info: "Marruecos fue el primer país africano en llegar a semis de un Mundial (2022). Su capital es Rabat."
+      bodyTex: "./modelos/texturas/MARRUECOS.webp", 
+      headTex: "./modelos/texturas/Cara_III.webp",
+      info: "🇲🇦 ¡Los Leones del Atlas! Marruecos hizo historia al ser la primera selección africana y árabe en llegar a las semifinales de un Mundial (Catar 2022) [citation:2]."
     },
     { 
       name: "MEXICO", 
       player: "SANTI GIMENEZ", 
-      bodyTex: "./modelos/texturas/MEXICO.png", 
-      bodyTexAnim: "./modelos/texturas/MEXICO.png", 
-      headTex: "./modelos/texturas/Cara_II.jpg",
-      info: "México ha ganado la Copa de Oro de la Concacaf en 12 ocasiones. Su capital es Ciudad de México."
+      bodyTex: "./modelos/texturas/MEXICO.webp", 
+      headTex: "./modelos/texturas/Cara_II.webp",
+      info: "🇲🇽 ¡El Tricampeón de la Concacaf! México es el gigante de Norteamérica con 14 Copas de Oro. Hará historia al ser sede de 3 Mundiales (1970, 1986 y 2026) [citation:1][citation:2]."
     },
     { 
       name: "NORUEGA", 
       player: "HAALAND", 
-      bodyTex: "./modelos/texturas/NORUEGA.png", 
-      bodyTexAnim: "./modelos/texturas/NORUEGA.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Noruega ha participado en 3 Copas del Mundo (1938, 1994, 1998). Su capital es Oslo."
+      bodyTex: "./modelos/texturas/NORUEGA.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇳🇴 Los Vikingos! Aunque no son los máximos ganadores, tienen un dato honorífico: son el único equipo invicto contra Brasil (nunca han perdido ante la pentacampeona) [citation:1]."
     },
     { 
       name: "NUEVA ZELANDA", 
       player: "WOOD", 
-      bodyTex: "./modelos/texturas/NUEVAZELANDA.png", 
-      bodyTexAnim: "./modelos/texturas/NUEVAZELANDA.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Nueva Zelanda ha ganado 5 veces la Copa de Naciones de la OFC. Su capital es Wellington."
+      bodyTex: "./modelos/texturas/NUEVAZELANDA.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇳🇿 ¡All Whites! Nueva Zelanda es el gigante de Oceanía, con 5 títulos de la Copa de las Naciones de la OFC. Clasificó a los Mundiales de 1982 y 2010 [citation:2]."
     },
     { 
       name: "PAISES BAJOS", 
       player: "VAN DIJK", 
-      bodyTex: "./modelos/texturas/PAISESBAJOS.png", 
-      bodyTexAnim: "./modelos/texturas/PAISESBAJOS.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Países Bajos ganó la Eurocopa en 1988 y fue 3 veces subcampeón mundial. Su capital es Ámsterdam."
+      bodyTex: "./modelos/texturas/PAISESBAJOS.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇳🇱 ¡La Naranja Mecánica! Países Bajos tiene una de las historias más tristes del fútbol: han sido 3 veces subcampeones del mundo (1974, 1978, 2010). Su estilo 'fútbol total' es legendario [citation:2]."
     },
     { 
       name: "PANAMA", 
       player: "PEREZ", 
-      bodyTex: "./modelos/texturas/PANAMA.png", 
-      bodyTexAnim: "./modelos/texturas/PANAMA.png", 
-      headTex: "./modelos/texturas/Cara_IV.png",
-      info: "Panamá clasificó a su primer Mundial en Rusia 2018. Su capital es Ciudad de Panamá."
+      bodyTex: "./modelos/texturas/PANAMA.webp", 
+      headTex: "./modelos/texturas/Cara_IV.webp",
+      info: "🇵🇦 ¡Los Canaleros! Panamá hizo historia al clasificar por primera vez a un Mundial en 2018. Su gol ante Inglaterra fue un momento histórico para el país."
     },
     { 
       name: "PARAGUAY", 
       player: "VALDEZ", 
-      bodyTex: "./modelos/texturas/PARAGUAY.png", 
-      bodyTexAnim: "./modelos/texturas/PARAGUAY.png", 
-      headTex: "./modelos/texturas/Cara_II.jpg",
-      info: "Paraguay ganó la Copa América en 1953 y 1979. Su capital es Asunción."
+      bodyTex: "./modelos/texturas/PARAGUAY.webp", 
+      headTex: "./modelos/texturas/Cara_II.webp",
+      info: "🇵🇾 ¡La Albirroja! Paraguay fue cuartofinalista en el Mundial de 2010. Es uno de los equipos más 'picantes' de Sudamérica, con 2 Copas América en su haber [citation:2]."
     },
     { 
       name: "PORTUGAL", 
       player: "RUIPATRICIO", 
-      bodyTex: "./modelos/texturas/PORTUGAL.png", 
-      bodyTexAnim: "./modelos/texturas/PORTUGAL.png", 
-      headTex: "./modelos/texturas/Cara_II.jpg",
-      info: "Portugal ganó la Eurocopa 2016 y la Nations League 2019. Su capital es Lisboa."
+      bodyTex: "./modelos/texturas/PORTUGAL.webp", 
+      headTex: "./modelos/texturas/Cara_II.webp",
+      info: "🇵🇹 ¡Las Quinas! Portugal es campeón de Europa (2016) y tiene en su haber la Nations League. Antes de Cristiano Ronaldo, solo habían ido a 3 Mundiales; con él, han ido a 6 consecutivos [citation:1][citation:2]."
     },
     { 
       name: "QATAR", 
       player: "AL-HAYDOS", 
-      bodyTex: "./modelos/texturas/QATAR.png", 
-      bodyTexAnim: "./modelos/texturas/QATAR.png", 
-      headTex: "./modelos/texturas/Cara_III.png",
-      info: "Qatar ganó la Copa Asiática de forma consecutiva en 2019 y 2023. Su capital es Doha."
+      bodyTex: "./modelos/texturas/QATAR.webp", 
+      headTex: "./modelos/texturas/Cara_III.webp",
+      info: "🇶🇦 ¡Los Anfitriones! Catar es el actual campeón de Asia (2019 y 2023). Fue sede del memorable Mundial de 2022, donde Messi finalmente levantó la copa."
     },
     { 
       name: "REPUBLICA DE IRAN", 
       player: "AZMOUN", 
-      bodyTex: "./modelos/texturas/IRAN.png", 
-      bodyTexAnim: "./modelos/texturas/IRAN.png", 
-      headTex: "./modelos/texturas/Cara_III.png",
-      info: "Irán ha ganado 3 veces la Copa Asiática de Naciones. Su capital es Teherán."
+      bodyTex: "./modelos/texturas/IRAN.webp", 
+      headTex: "./modelos/texturas/Cara_III.webp",
+      info: "🇮🇷 ¡Team Melli! Irán es una potencia asiática con 3 Copas Asiáticas. Es conocida por tener una defensa férrea y por ser uno de los equipos más difíciles de vencer en Asia."
     },
     { 
       name: "SENEGAL", 
       player: "MANE", 
-      bodyTex: "./modelos/texturas/SENEGAL.png", 
-      bodyTexAnim: "./modelos/texturas/SENEGAL.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Senegal es el campeón de la Copa Africana de Naciones 2021. Su capital es Dakar."
+      bodyTex: "./modelos/texturas/SENEGAL.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇸🇳 ¡Los Leones de la Teranga! Senegal es el campeón de África 2021. Son famosos por eliminar a Francia en el Mundial de 2002 y por su portero Édouard Mendy [citation:1][citation:2]."
     },
     { 
       name: "SUDAFRICA", 
       player: "MOKOENA", 
-      bodyTex: "./modelos/texturas/SUDAFRICA.png", 
-      bodyTexAnim: "./modelos/texturas/SUDAFRICA.png", 
-      headTex: "./modelos/texturas/Cara_V.png",
-      info: "Sudáfrica ganó la Copa Africana en 1996 y organizó el Mundial 2010. Su capital es Pretoria."
+      bodyTex: "./modelos/texturas/SUDAFRICA.webp", 
+      headTex: "./modelos/texturas/Cara_V.webp",
+      info: "🇿🇦 ¡Bafana Bafana! Sudáfrica fue la primera nación africana en organizar un Mundial (2010). Su recuerdo más vívido es el sonido de las vuvuzelas y el gol de Tshabalala [citation:2]."
     },
     { 
       name: "SUIZA", 
       player: "XHAKA", 
-      bodyTex: "./modelos/texturas/SUIZA.png", 
-      bodyTexAnim: "./modelos/texturas/SUIZA.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Suiza ha llegado a cuartos de final en tres Mundiales. Su capital es Berna."
+      bodyTex: "./modelos/texturas/SUIZA.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇨🇭 ¡La Nati! Suiza tiene un récord único en la historia: en el Mundial de 2006 no recibió ni un solo gol en todo el torneo, aunque quedaron eliminados en penales [citation:1]."
     },
     { 
       name: "TUNEZ", 
       player: "MSAKNI", 
-      bodyTex: "./modelos/texturas/TUNEZ.png", 
-      bodyTexAnim: "./modelos/texturas/TUNEZ.png", 
-      headTex: "./modelos/texturas/Cara_III.png",
-      info: "Túnez ganó la Copa Africana de Naciones en 2004. Su capital es Túnez."
+      bodyTex: "./modelos/texturas/TUNEZ.webp", 
+      headTex: "./modelos/texturas/Cara_III.webp",
+      info: "🇹🇳 ¡Las Águilas de Cartago! Túnez fue el primer país africano en ganar un partido de Mundial (1978). Son los eternos aspirantes en África."
     },
     { 
       name: "URUGUAY", 
       player: "SUAREZ", 
-      bodyTex: "./modelos/texturas/URUGUAY.png", 
-      bodyTexAnim: "./modelos/texturas/URUGUAY.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Uruguay ganó el Mundial en 1930 y 1950, y tiene 15 Copas América. Su capital es Montevideo."
+      bodyTex: "./modelos/texturas/URUGUAY.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇺🇾 ¡La Celeste! Uruguay ganó el PRIMER Mundial de la historia en 1930 y lo repitió en 1950 (Maracanazo). Con 15 Copas América, son los reyes de América del Sur [citation:2]."
     },
     { 
       name: "UZBEKISTAN", 
       player: "SHOMURODOV", 
-      bodyTex: "./modelos/texturas/UZBEKISTAN.png", 
-      bodyTexAnim: "./modelos/texturas/UZBEKISTAN.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Uzbekistán ganó los Juegos Asiáticos en 1994. Su capital es Taskent."
+      bodyTex: "./modelos/texturas/UZBEKISTAN.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇺🇿 ¡Los Lobos Blancos! Uzbekistán es la selección revelación de Asia. Aún no han ido a un Mundial, pero son los actuales campeones del fútbol asiático juvenil."
     },
     { 
       name: "ALBANIA", 
       player: "BROJA", 
-      bodyTex: "./modelos/texturas/ALBANIA.png", 
-      bodyTexAnim: "./modelos/texturas/ALBANIA.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "Tras destacar en la Eurocopa, Albania busca su primera cita mundialista."
+      bodyTex: "./modelos/texturas/ALBANIA.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇦🇱 ¡Las Águilas! Albania sorprendió al mundo al clasificar a la Eurocopa 2016. Son un equipo que ha creído en su potencial y lucha contra los gigantes europeos."
     },
     { 
       name: "BOLIVIA", 
       player: "MIGUEL TERCEROS", 
-      bodyTex: "./modelos/texturas/BOLIVIA.png", 
-      bodyTexAnim: "./modelos/texturas/BOLIVIA.png", 
-      headTex: "./modelos/texturas/Cara_I.png",
-      info: "La Verde busca aprovechar la altura de El Alto para volver a una cita mundialista."
+      bodyTex: "./modelos/texturas/BOLIVIA.webp", 
+      headTex: "./modelos/texturas/Cara_I.webp",
+      info: "🇧🇴 ¡La Verde! Bolivia fue campeón de América en 1963 jugando en su altiplanicie. Son conocidos por jugar en el estadio más alto del mundo (más de 3,600 metros), lo que la hace imbatible de local [citation:2]."
     },
     { 
       name: "HONDURAS", 
       player: "LUIS PALMA", 
-      bodyTex: "./modelos/texturas/HONDURAS.png", 
-      bodyTexAnim: "./modelos/texturas/HONDURAS.png", 
-      headTex: "./modelos/texturas/Cara_V.png",
-      info: "Honduras busca su cuarta participación mundialista en 2026."
+      bodyTex: "./modelos/texturas/HONDURAS.webp", 
+      headTex: "./modelos/texturas/Cara_V.webp",
+      info: "🇭🇳 ¡Los Catrachos! Honduras ha participado en 3 Mundiales (1982, 2010, 2014). Es una selección guerrera que siempre pelea cada partido en la eliminatoria de la Concacaf."
     },
     { 
       name: "MALI", 
       player: "BISSOUMA", 
-      bodyTex: "./modelos/texturas/MALI.png", 
-      bodyTexAnim: "./modelos/texturas/MALI.png", 
-      headTex: "./modelos/texturas/Cara_III.png",
-      info: "Mali busca su histórico debut en un Mundial mayor tras brillar en juveniles."
+      bodyTex: "./modelos/texturas/MALI.webp", 
+      headTex: "./modelos/texturas/Cara_III.webp",
+      info: "🇲🇱 ¡Las Águilas! Malí es una de las potencias emergentes de África. Han sido subcampeones de África y tienen una generación dorada liderada por Yves Bissouma."
     },
     { 
       name: "OMAN", 
       player: "AL-YAHYAEI", 
-      bodyTex: "./modelos/texturas/OMAN.png", 
-      bodyTexAnim: "./modelos/texturas/OMAN.png", 
-      headTex: "./modelos/texturas/Cara_III.png",
-      info: "Una selección asiática en constante crecimiento que busca dar la sorpresa."
+      bodyTex: "./modelos/texturas/OMAN.webp", 
+      headTex: "./modelos/texturas/Cara_III.webp",
+      info: "🇴🇲 Los Rojos! Omán es un clásico de la Copa del Golfo, siendo campeones en 2009 y 2017. Buscan dar el salto a la élite del fútbol asiático."
     },
     { 
       name: "REPUBLICA DOMINICANA DEL CONGO", 
       player: "WISSA", 
-      bodyTex: "./modelos/texturas/RDCONGO.png", 
-      bodyTexAnim: "./modelos/texturas/RDCONGO.png", 
-      headTex: "./modelos/texturas/Cara_III.png",
-      info: "Una de las selecciones más fuertes de África en la actualidad."
+      bodyTex: "./modelos/texturas/RDCONGO.webp", 
+      headTex: "./modelos/texturas/Cara_III.webp",
+      info: "🇨🇩 ¡Los Leopardos! La RD Congo fue la primera selección africana en clasificar a un Mundial (1974 como Zaire). Son dos veces campeones de África [citation:2]."
     }
   ];
-
+  
   equipos.forEach((equipo, index) => {
 
     const targetEntity = document.createElement('a-entity');
