@@ -1195,7 +1195,7 @@ async function cambiarAModoBase() {
 
             if (contadorActualizaciones >= MAX_DETECCIONES) {
                 const msgReload = document.createElement('div');
-                msgReload.innerText = '🔄 Reiniciando escáner completamente...';
+                msgReload.innerText = 'Reiniciando escáner completamente...';
                 msgReload.style.position = 'fixed';
                 msgReload.style.bottom = '30%';
                 msgReload.style.left = '50%';
