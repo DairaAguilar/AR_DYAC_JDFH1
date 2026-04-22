@@ -594,6 +594,8 @@ setCustomScannerVisible(true);
       modeloPantallaEntity = null;
     }
     modeloPantalla = null;
+
+    document.querySelectorAll('#nombre-jugador').forEach(el => el.remove());
   }
   
   async function cambiarAModoAnimado() {
